@@ -1,0 +1,122 @@
+<!-- 资质修改页面 -->
+<template>
+  <div class="AptitudeInfo_class">
+    <van-panel title="修改资质">
+      <div>
+        <van-row>
+          <van-col span="24">
+            <van-field label="资质名称:" :value="aptitudeName" label-width="65px" disabled />
+          </van-col>
+        </van-row>
+        <van-row>
+          <van-col span="14">
+            <van-field label="资质有效期:" :value="begDate"  disabled />
+          </van-col>
+          <van-col span="10">
+            <van-field label="到" :value="endDate" label-width="25px" disabled />
+          </van-col>
+        </van-row>
+        <van-row>
+          <van-col span="14">
+            <van-field
+              readonly
+              clickable
+              name="calendar"
+              :value="newBegDate"
+              label="资质有效期新:"
+              placeholder="选择日期"
+              @click="showBegCalendar = true"
+            />
+            <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" />
+          </van-col>
+          <van-col span="10">
+            <van-field
+              readonly
+              clickable
+              name="calendar"
+              :value="newEndDate"
+              label-width="25px"
+              label="到"
+              placeholder="选择日期"
+              @click="showEndCalendar = true"
+            />
+            <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" />
+          </van-col>
+        </van-row>
+        <van-panel title="附件上传">
+          <div>
+            <van-row type="flex" justify="center">
+              <van-col span="23">
+                <van-uploader v-model="fileList" multiple :max-count="1" />
+              </van-col>
+            </van-row>
+          </div>
+        </van-panel>
+        <van-row type="flex" justify="center">
+          <van-col span="23">
+            <van-button round type="primary" block @click="submit">保存提交</van-button>
+          </van-col>
+        </van-row>
+      </div>
+    </van-panel>
+  </div>
+</template>
+
+<script>
+//这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
+//例如：import 《组件名称》 from '《组件路径》';
+import moment from 'moment'//导入日期格式化
+export default {
+  //import引入的组件需要注入到对象中才能使用
+  components: {},
+  data() {
+    //这里存放数据
+    return {
+      aptitudeName: "证件名称1",
+      begDate: "2020-03-03",
+      endDate: "2020-03-31",
+      newBegDate:'',
+      newEndDate:'',
+      showBegCalendar: false,
+      showEndCalendar: false,
+      fileList:[]
+    };
+  },
+  //监听属性 类似于data概念
+  computed: {},
+  //监控data中的数据变化
+  watch: {},
+  //方法集合
+  methods: {
+    formatDate(date) {
+      return moment(date).format("YYYY-MM-DD");
+      // return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+    },
+    onBegConfirm(date) {
+      this.newBegDate = this.formatDate(date);
+      this.showBegCalendar = false;
+    },
+    onEndConfirm(date) {
+      this.newEndDate = this.formatDate(date);
+      this.showEndCalendar = false;
+    },
+    submit(){
+        
+    }
+  },
+  //生命周期 - 创建完成（可以访问当前this实例）
+  created() {},
+  //生命周期 - 挂载完成（可以访问DOM元素）
+  mounted() {},
+  beforeCreate() {}, //生命周期 - 创建之前
+  beforeMount() {}, //生命周期 - 挂载之前
+  beforeUpdate() {}, //生命周期 - 更新之前
+  updated() {}, //生命周期 - 更新之后
+  beforeDestroy() {}, //生命周期 - 销毁之前
+  destroyed() {}, //生命周期 - 销毁完成
+  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+};
+</script>
+<style lang='scss' scoped>
+//@import url(); 引入公共css类
+</style>
