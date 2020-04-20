@@ -4,9 +4,16 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vant from 'vant';//导入Vant框架
+import axios from 'axios';//导入axios
+import VueAxios from 'vue-axios';//导入axios
+Vue.use(VueAxios,axios);//添加Vant依赖
+
 import 'vant/lib/index.css';//导入Vant样式
 Vue.use(Vant);//添加Vant依赖
 
+
+import { Lazyload } from 'vant';
+Vue.use(Lazyload);
 //自定义组件
 //订单主页面组件
 import Order from './components/orderConfirmation/Order.vue'
@@ -46,6 +53,7 @@ import AptitudeInfo from './components/userSettings/AptitudeInfo.vue'
 import Announcement from './components/announcement/Announcement.vue'
 //巴比公告详情
 import AnnouncementInfo from './components/announcement/AnnouncementInfo.vue'
+import Axios from 'axios';
 
 Vue.config.productionTip = false
 

@@ -9,7 +9,7 @@
               <van-col span="2"></van-col>
               <van-col span="7">订单号</van-col>
               <van-col span="8">订单交期</van-col>
-              <van-col span="5">代发物料</van-col>
+              <van-col span="5">待发物料</van-col>
             </van-row>
           </div>
         </van-sticky>

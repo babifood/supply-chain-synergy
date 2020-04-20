@@ -47,7 +47,7 @@
           <div>
             <van-row type="flex" justify="center">
               <van-col span="23">
-                <van-uploader v-model="fileList" multiple :max-count="1" />
+                <van-uploader v-model="fileList" multiple :max-count="4" />
               </van-col>
             </van-row>
           </div>

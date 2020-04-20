@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Home from '@/components/Home'
 //订单主页面
 import Order from '@/components/orderConfirmation/Order'
 //订单详情页面
@@ -44,8 +44,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'Home',
+      component: Home
     },
     {
       path: '/Order',
@@ -73,7 +73,7 @@ export default new Router({
       component: SeparateFaHuo
     },
     {
-      path: '/DeliveryRelease/ArrivalNotice',
+      path: '/ArrivalNotice',
       name: 'ArrivalNotice',
       component: ArrivalNotice
     },

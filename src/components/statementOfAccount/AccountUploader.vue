@@ -43,17 +43,17 @@
     <div>
       <van-panel title="账单扫描件:">
         <div>
-          <van-uploader v-model="billFileList" :max-count="1" />
+          <van-uploader v-model="billFileList" :max-count="4" />
         </div>
       </van-panel>
       <van-panel title="发票扫描件:">
         <div>
-          <van-uploader v-model="invoiceFileList" :max-count="1" />
+          <van-uploader v-model="invoiceFileList" :max-count="4" />
         </div>
       </van-panel>
       <van-panel title="其他文件:">
         <div>
-          <van-uploader v-model="restsFileList" multiple :max-count="3" />
+          <van-uploader v-model="restsFileList" multiple :max-count="4" />
         </div>
       </van-panel>
     </div>
