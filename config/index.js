@@ -11,12 +11,12 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api':{
-        target:'https://www.runoob.com',
+      '/api': {
+        target:'http://10.4.1.27:8482',
+        // secure: false, // 如果是https接口，需要配置这个参数
         changeOrigin:true,
-        secure:true,
-        pathRewrith:{
-          '^/api':'/api'
+        pathRewrite:{
+          '^/api': ''
         }
       }
     },

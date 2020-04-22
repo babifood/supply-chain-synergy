@@ -14,7 +14,7 @@
           </div>
         </van-sticky>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <div class="list_item" v-for="item in list" :key="item.orderId" tag="div">
+          <div class="list_item" v-for="item in list" :key="item.deliveryId" tag="div">
             <van-row type="flex" justify="center">
               <van-col span="2" class="checkbox_col">
                 <van-field name="checkbox">
@@ -23,9 +23,9 @@
                   </template>
                 </van-field>
               </van-col>
-              <van-col span="7">{{item.orderCode}}</van-col>
-              <van-col span="8">{{item.requireDate}}</van-col>
-              <van-col span="5">{{item.dropShipping}}</van-col>
+              <van-col span="7">{{item.id}}</van-col>
+              <van-col span="8">{{item.expireTime}}</van-col>
+              <van-col span="5">{{item.matterNum}}</van-col>
             </van-row>
             <div class="van-hairline--bottom"></div>
           </div>
@@ -108,6 +108,7 @@ export default {
       list: [],
       loading: false,
       finished: false,
+      limit:0,
       begDateVal: "",
       endDateVal: "",
       showBegCalendar: false,
@@ -125,42 +126,78 @@ export default {
     onLoad() {
       // 异步更新数据
       // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 30; i++) {
-          let listItem = {
-            orderId: i,
-            orderStatus: false,
-            orderCode: "450000000" + i,
-            requireDate: "2020.02.26/13:55",
-            dropShipping: 2, //代发物料
-          };
-          this.list.push(listItem);
-        }
+      // setTimeout(() => {
+      //   for (let i = 0; i < 30; i++) {
+      //     let listItem = {
+      //       orderId: i,
+      //       orderStatus: false,
+      //       orderCode: "450000000" + i,
+      //       requireDate: "2020.02.26/13:55",
+      //       dropShipping: 2, //代发物料
+      //     };
+      //     this.list.push(listItem);
+      //   }
 
-        // 加载状态结束
-        this.loading = false;
+      //   // 加载状态结束
+      //   this.loading = false;
 
-        // 数据全部加载完成
-        if (this.list.length >= 30) {
-          this.finished = true;
-        }
-      }, 1000);
+      //   // 数据全部加载完成
+      //   if (this.list.length >= 30) {
+      //     this.finished = true;
+      //   }
+      // }, 1000);
+      this.limit++;
+      this.axios
+        .get("/api/supplier/delivery/getDeliveryOrderList", {
+          headers: {
+            'token': '1',
+          },
+          params: {
+            limit: this.limit,
+            page:10
+          }
+        })
+        .then(response => {
+          console.log(response);
+          // 加载状态结束
+          this.loading = false;
+          // this.list = response.data.data.list;
+          this.list=[
+            {
+              deliveryId: "1", 
+              expireTime: "1900-01-01 00:00", 
+              id: 1, 
+              matterNum: 0
+            },{
+              deliveryId: "2", 
+              expireTime: "1900-01-01 00:00", 
+              id: 2, 
+              matterNum: 0
+            }
+          ];
+          // if(response.data.data.total>=this.list.length){
+            this.finished = true;
+          // }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     entiretyFaHuo() {
       //整单发货
       this.list.forEach(element => {
         if(element.orderStatus){
-          this.orderIdList.push(element.orderId);
+          this.orderIdList.push(element.deliveryId);
         }
       });
-      // console.log(this.orderIdList);
-      this.$router.push({path:'/DeliveryRelease/EntiretyFaHuo/',params: this.orderIdList});
+      //console.log(this.orderIdList);
+      this.$router.push({path:'/DeliveryRelease/EntiretyFaHuo/',query:{orders:this.orderIdList}});
     },
     separateFaHuo() {
       //分料发货
       this.list.forEach(element => {
         if(element.orderStatus){
-          this.orderIdList.push(element.orderId);
+          this.orderIdList.push(element.deliveryId);
         }
       });
       this.$router.push({path:'/DeliveryRelease/SeparateFaHuo/',params: this.orderIdList});

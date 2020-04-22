@@ -14,16 +14,16 @@
     </van-sticky>
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <router-link
-        :to="'/Order/OrderInfo/'+item.ordetId"
+        :to="'/Order/OrderInfo/'+item.orderNo"
         class="list_item"
         v-for="item in list"
-        :key="item.ordetId"
+        :key="item.orderNo"
         tag="div"
       >
         <van-row type="flex" justify="center">
           <van-col span="7">{{item.orderDate}}</van-col>
-          <van-col span="8">{{item.orderCode}}</van-col>
-          <van-col span="7">{{item.requireDate}}</van-col>
+          <van-col span="8">{{item.orderNo}}</van-col>
+          <van-col span="7">{{item.expireTime}}</van-col>
           <van-col span="1">
             <van-icon name="arrow" />
           </van-col>
@@ -46,7 +46,8 @@ export default {
     return {
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      limit : 0,
     };
   },
   //监听属性 类似于data概念
@@ -57,26 +58,31 @@ export default {
   methods: {
     onLoad() {
       // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          let listItem = {
-            ordetId: i,
-            orderDate: "2020.02.26",
-            orderCode: "450000000" + i,
-            requireDate: "2020.02.26"
-          };
-          this.list.push(listItem);
-        }
-
-        // 加载状态结束
-        this.loading = false;
-
-        // 数据全部加载完成
-        if (this.list.length >= 10) {
-          this.finished = true;
-        }
-      }, 1000);
+      this.limit++;
+      this.axios
+        .get("/api/supplier/order/getOrderInfoList", {
+          headers: {
+            'token': '1',
+            'supplierCode':'1'
+          },
+          params: {
+            limit: this.limit,
+            page:10
+          }
+        })
+        .then(response => {
+          console.log(response);
+          // 加载状态结束
+          this.loading = false;
+          // this.list = response.data.data.list;
+          this.list=[{orderDate:'2020-04-22',orderNo:'20200422',expireTime:'2020-04-22'}];
+          if(response.data.data.total>=this.list.length){
+            this.finished = true;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -106,6 +112,5 @@ export default {
     line-height: 40px;
     font-size: 12px;
   }
-  
 }
 </style>

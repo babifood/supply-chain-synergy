@@ -53,9 +53,9 @@ import AptitudeInfo from './components/userSettings/AptitudeInfo.vue'
 import Announcement from './components/announcement/Announcement.vue'
 //巴比公告详情
 import AnnouncementInfo from './components/announcement/AnnouncementInfo.vue'
-import Axios from 'axios';
 
 Vue.config.productionTip = false
+
 
 /* eslint-disable no-new */
 new Vue({

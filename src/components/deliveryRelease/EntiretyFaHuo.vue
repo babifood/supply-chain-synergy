@@ -1,139 +1,28 @@
 <!-- 整单发货页面 -->
 <template>
   <div class="EntiretyFaHuo_class">
-    <div>
+    <div v-for="(item) in entiretyList" :key="item.productId">
       <van-row>
         <van-col span="24">
-          <van-field label="商品名称:" label-width="65px" disabled />
+          <van-field label="商品名称:" label-width="65px" :value="item.productName" disabled />
         </van-col>
       </van-row>
       <van-row>
         <van-col span="24">
-          <van-field label="订单号:" label-width="65px" disabled />
+          <van-field label="订单号:" label-width="65px" :value="item.orderCode" disabled />
         </van-col>
       </van-row>
       <van-row>
         <van-col span="24">
-          <van-field label="交货地址:" label-width="65px" disabled />
+          <van-field label="交货地址:" label-width="65px" :value="item.address" disabled />
         </van-col>
       </van-row>
       <van-row>
         <van-col span="12">
-          <van-field label="订单数量:" label-width="65px" type="number" disabled />
+          <van-field label="订单数量:" label-width="65px" type="number" :value="item.productNub+item.unit" disabled />
         </van-col>
         <van-col span="12">
-          <van-field label="已发货:" label-width="65px" type="number" disabled />
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="12">
-          <van-field
-            label="本次发货:"
-            label-width="65px"
-            type="number"
-            required
-            placeholder="请输入数量"
-            @blur="thisShipmentBlur"
-          />
-        </van-col>
-        <van-col span="12" class="checkbox_class">
-          <van-checkbox v-model="checked" shape="square">已发全</van-checkbox>
-        </van-col>
-      </van-row>
-      <van-panel title="附件上传">
-        <div>
-          <van-row type="flex" justify="center">
-            <van-col span="23">
-              <van-uploader v-model="fileList" multiple :max-count="4" />
-            </van-col>
-          </van-row>
-        </div>
-      </van-panel>
-      <van-divider :style="{ color: 'chocolate', borderColor: 'chocolate'}"></van-divider>
-    </div>
-    <!-- 底部区域填写预计发货时间、配送方式、备注信息 -->
-    <div class="footer_button">
-      <van-row>
-        <van-col span="24">
-          <van-field
-            readonly
-            clickable
-            label="预计到货时间:"
-            :value="dateTimeValue"
-            placeholder="请选择到货时间"
-            @click="dateTimeShowPicker = true"
-          />
-          <van-popup v-model="dateTimeShowPicker" position="bottom">
-            <van-datetime-picker
-              type="datetime"
-              v-model="currentDate"
-              @cancel="dateTimeShowPicker = false"
-              @confirm="onDateTimeConfirm"
-            />
-          </van-popup>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="24">
-          <van-field
-            readonly
-            clickable
-            label="配送方式:"
-            :value="distributionValue"
-            placeholder="请选择配送方式"
-            @click="distributionShowPicker = true"
-          />
-          <van-popup v-model="distributionShowPicker" position="bottom">
-            <van-picker
-              show-toolbar
-              :columns="distributionColumns"
-              @cancel="distributionShowPicker = false"
-              @confirm="onConfirm"
-            />
-          </van-popup>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="24">
-          <van-field
-            v-model="shipmentDect"
-            rows="2"
-            autosize
-            label="发货说明:"
-            type="textarea"
-            placeholder="请输入留言"
-          />
-        </van-col>
-      </van-row>
-      <van-row type="flex" justify="center">
-        <van-col span="23">
-          <van-button round type="primary" block @click="shipmentSubmit">发货提交</van-button>
-        </van-col>
-      </van-row>
-    </div>
-
-    <div>
-      <van-row>
-        <van-col span="24">
-          <van-field label="商品名称:" label-width="65px" disabled />
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="24">
-          <van-field label="订单号:" label-width="65px" disabled />
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="24">
-          <van-field label="交货地址:" label-width="65px" disabled />
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="12">
-          <van-field label="订单数量:" label-width="65px" type="number" disabled />
-        </van-col>
-        <van-col span="12">
-          <van-field label="已发货:" label-width="65px" type="number" disabled />
+          <van-field label="已发货:" label-width="65px" type="number" :value="item.sentProductNub" disabled />
         </van-col>
       </van-row>
       <van-row>
@@ -144,11 +33,12 @@
             type="number"
             required
             placeholder="请输入数量"
-            @blur="thisShipmentBlur"
+            @blur="thisShipmentBlur(item.productId)"
+            v-model="item.thisProductNub"
           />
         </van-col>
         <van-col span="12" class="checkbox_class">
-          <van-checkbox v-model="checked" shape="square">已发全</van-checkbox>
+          <van-checkbox v-model="item.checked" shape="square">已发全</van-checkbox>
         </van-col>
       </van-row>
       <van-panel title="附件上传">
@@ -228,15 +118,18 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
+import qs from 'qs'
 import moment from "moment"; //导入日期格式化
+import { Toast } from "vant";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
     return {
-      checked: false,
-      fileList: [],
+      deliveryIds:[],//父页面选中的发货订单ID数组
+      fileList: [],//附件列表
+      entiretyList:[],//整单发货商品明细列表
       shipmentDect: "",
       distributionValue: "", //配送方式
       distributionColumns: ["集装箱卡车", "快递配送"], //配送方式选择
@@ -252,45 +145,123 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    thisShipmentBlur() {
+    //加载订单产品数据
+    loadOrdeProduct(){
+      this.axios
+        .get("/api/supplier/delivery/getDeliveryOrderList", {
+          headers: {
+            'token': '1',
+          },
+          params: {
+            deliveryIds:qs.stringify(this.deliveryIds)
+          }
+        })
+        .then(response => {
+          console.log(response);
+          var array = [
+            {
+              deliveryId: "bfb5c5f631fc43cc85b6ca669b5f933a", 
+              address: "地址", 
+              matterUtil: "筐", 
+              detailId: "2268760760bf4651850a588ff7f2cb91", 
+              id: 6, 
+              matterNum: 0, 
+              matterDesc: "描述", 
+              finishNum: 0, 
+              matterName: "手机下单测试物料"
+            }
+          ]
+          this.entiretyList = this.objectBindingValue(array);
+          console.log(this.entiretyList);
+          
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    objectBindingValue(array){//对象绑定值
+      var returnArray = new Array();
+      array.forEach(function(obj){
+        let item = {
+          productId:obj.detailId,//产品ID
+          productName:obj.matterName,//产品名称
+          orderCode:obj.id,//订单号
+          address:obj.address,//交货地址
+          productNub:obj.matterNum,//订单数量
+          sentProductNub:obj.finishNum,//已发产品数量
+          thisProductNub:'',//本次发货数量
+          unit:obj.matterUtil,//单位
+          checked:false,//是否发全
+          predictAOG_date:'',//预计到货时间
+          distribution:'',//配送方式
+          productDESC:''//备注说明
+        }
+        returnArray.push(item);
+      });
+      return returnArray;
+    },
+    thisShipmentBlur(productId) {
       //本次发货失去焦点事件
-      this.checked = "true";
+      let en = this.entiretyList.find(item => item.productId===productId);
+      if((parseFloat(en.sentProductNub) + parseFloat(en.thisProductNub))>= parseFloat(en.productNub)){
+        en.checked = true;
+      }else{
+        en.checked = false;
+      }
     },
     onConfirm(value) {
       //配送方式下拉选择
       this.distributionValue = value;
       this.distributionShowPicker = false;
     },
-    // dateTimeFormatter(type, val){
-    //   console.log(type);
-    //   if (type === 'year') {
-    //     return `${val}年`;
-    //   } else if (type === 'month') {
-    //     return `${val}月`
-    //   }else if (type === 'day') {
-    //     return `${val}日`
-    //   }else if (type === 'hour') {
-    //     return `${val}时`
-    //   }else if (type === 'miunte') {
-    //     return `${val}分`
-    //   }
-    // },
     onDateTimeConfirm(value) {
       this.dateTimeValue = moment(value).format("YYYY-MM-DD HH:mm");
       this.dateTimeShowPicker = false;
     },
     shipmentSubmit() {
-      //发货提交
+      let dateTimeValue = this.dateTimeValue;
+      let distributionValue = this.distributionValue;
+      let shipmentDect = this.shipmentDect;
+      var dataArr = new Array()
+      this.entiretyList.forEach(function (obj){
+        let item = {
+          deliveryId:obj.orderCode,//发货单id 		
+          detailId:obj.productId,//发货详细id	
+          expectTime:dateTimeValue,//预计到货时间 		
+          matterNum:obj.thisProductNub,//物料数量 	
+          matterUtil:obj.unit,//物料单位 	 		
+          shippingMethod:distributionValue,//配送类型 
+          description:shipmentDect	//描述
+        }
+        dataArr.push(item);
+      })
+      console.log(dataArr);
+      
+      this.axios.post('/api/supplier/delivery/updateDeliveryOrderDetail',dataArr
+        ,{
+          headers: {
+            token: "1",
+            operatorId:"1"
+          }
+        }
+      ).then(function (response) {
+        console.log(response);
+        Toast.success('发货提交成功');
+      })
+      .catch(function (error) {
+        console.log(error);
+        Toast.fail('发货提交失败');
+      });
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
-  //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
+  created() {
     //获取路由参数(勾选的订单ID号数组)
-    console.log(this.$route.params);
-    console.log(this.fileList);
+    this.deliveryIds = this.$route.query.orders;    
+    this.loadOrdeProduct();
   },
+  //生命周期 - 挂载完成（可以访问DOM元素）
+  mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前

@@ -47,9 +47,29 @@ export default {
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    loadData(){
+      this.axios
+        .get("/api/supplier/home/getHomeHelperInfo", {
+          headers: {
+            token: "tokenValue"
+          }
+          // params: {
+          //   operatorId: '操作人ID'
+          // }
+        })
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.loadData();
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前

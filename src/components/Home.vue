@@ -16,7 +16,7 @@
     <van-notice-bar
       v-for="(item,index) in msgs"
       :key="index"
-      :text="item"
+      :text="item.messageTitle"
       left-icon="volume-o"
       color="rgb(230, 41, 41)"
       background="#fff"
@@ -42,17 +42,13 @@ export default {
   name: "Home",
   data() {
     return {
-      orderInfo:1,
-      deliveryReleaseInfo:2,
-      arrivalNoticeInfo:3,
-      accountMainInfo:4,
-      aptitudeInfo:5,
-      announcementInfo:6,
-      msgs: [
-        "供应链协同平台即将上线！沟通需求和供应商之间的桥梁1",
-        "供应链协同平台即将上线！沟通需求和供应商之间的桥梁2",
-        "供应链协同平台即将上线！沟通需求和供应商之间的桥梁3"
-      ],
+      orderInfo:0,//订单确认
+      deliveryReleaseInfo:0,//发货通知
+      arrivalNoticeInfo:0,//到货通知
+      accountMainInfo:0,//账单确认
+      aptitudeInfo:0,//资质信息
+      announcementInfo:0,//巴比公告
+      msgs: [],
     };
   },
   //方法集合
@@ -61,13 +57,21 @@ export default {
       this.axios.get('/api/supplier/home/getHomePageInfo',
       {
         headers: {
-          'token': 'tokenValue'
+          'token': '1',
+          'operatorId': '1'
         },
-        params: {
-          operatorId: '操作人ID'
-        }
+        // params: {
+        //   operatorId: '操作人ID'
+        // }
       }).then(response =>{
         console.log(response);
+        this.orderInfo=response.data.data.matterOrderNum;//订单确认
+        this.deliveryReleaseInfo=response.data.data.deliveryOrderNum;//发货通知
+        // this.arrivalNoticeInfo=this.response.data.data.deliveryOrderNum;//到货通知(后台接口没有)
+        this.accountMainInfo=response.data.data.stateOrderNum;//账单确认
+        this.aptitudeInfo=response.data.data.providerNum;//资质信息
+        this.announcementInfo=response.data.data.messageNum;//巴比公告
+        this.msgs = response.data.data.messageList;
       }).catch(error =>{
         console.log(error);
       });

@@ -76,7 +76,7 @@
             <van-col span="12">
               <van-field
                 type="text"
-                :value="orderCode"
+                :value="orderNo"
                 label="订单号:"
                 disabled
                 label-width="50px"
@@ -145,14 +145,14 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import { Toast } from "vant";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
     return {
-      orderCode: "4500000001",
+      orderNo: "",
       orderSum: "5000000",
       buyer: "张三",
       mobileNub: "15666668888",
@@ -190,12 +190,53 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    //加载订单下的商品明细
+    loadProduct(){
+      this.axios
+        .get("/api/supplier/order/getOrderDetailList", {
+          headers: {
+            token: "tokenValue"
+          },
+          params: {
+            orderNo: this.orderNo
+          }
+        })
+        .then(response => {
+          console.log(response);
+          
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //订单确认
     affirmOrder() {
-      console.log(this.affirmDESC);
+       this.axios.post('api/supplier/order/updateOrderInfo',
+        {
+          'confirmDesc': this.affirmDESC,
+          'orderNo': this.orderNo
+        },{
+          headers: {
+            token: "1",
+            operatorId : '1'
+          }
+        }
+      ).then(function (response) {
+        console.log(response);
+        Toast.success('订单确定成功');
+      })
+      .catch(function (error) {
+        console.log(error);
+        Toast.fail('订单确定失败');
+      });
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    //订单编号等于路由传过来的订单编号
+    this.orderNo = this.$route.params.ordetId;
+    this.loadProduct()
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
