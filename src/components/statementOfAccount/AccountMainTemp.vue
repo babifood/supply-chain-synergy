@@ -39,26 +39,28 @@
         </van-row>
       </div>
     </van-sticky>
-    <!-- 公告内容列表 -->
-    <router-link
-      class="list_item"
-      v-for="item in accountList "
-      :key="item.accountId"
-      tag="div"
-      :to="routerPath+item.accountId"
-    >
-      <van-row type="flex" justify="center">
-        <van-col span="7">{{item.accountDate}}</van-col>
-        <van-col span="9">{{item.accountCode}}</van-col>
-        <van-col span="6">{{item.accountStatus}}</van-col>
-        <van-col span="2">
-          <div>
-            <van-icon name="arrow" />
-          </div>
-        </van-col>
-      </van-row>
-      <div class="van-hairline--bottom"></div>
-    </router-link>
+    <!-- 账单内容列表 -->
+    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> 
+      <router-link
+        class="list_item"
+        v-for="item in list "
+        :key="item.stateOrderId"
+        tag="div"
+        :to="routerPath+item.billNo+'/'+item.billMonth"
+      >
+        <van-row type="flex" justify="center">
+          <van-col span="7">{{item.billMonth}}</van-col>
+          <van-col span="9">{{item.billNo}}</van-col>
+          <van-col span="6">{{item.billStatus}}</van-col>
+          <van-col span="2">
+            <div>
+              <van-icon name="arrow" />
+            </div>
+          </van-col>
+        </van-row>
+        <div class="van-hairline--bottom"></div>
+      </router-link>
+    </van-list>
   </div>
 </template>
 
@@ -73,11 +75,16 @@ export default {
     //这里存放数据
     return {
       routerPath:'',//路由地址
+      url:'',//数据请求地址
       accountActive: this.parentActive,
-      accountList: [],
       showCalendar: false,
       accountYear: '',
-      currentDate:new Date()
+      currentDate:new Date(),
+
+      list: [],
+      loading: false,
+      finished: false,
+      limit : 0,
     };
   },
   //监听属性 类似于data概念
@@ -94,16 +101,76 @@ export default {
     formatDate(date) {
       return moment(date).format("YYYY");
     },
-    getAccountData() {
-      for (let i = 0; i < 20; i++) {
-        let listItem = {
-          accountId: i,
-          accountDate: "2020年02月",
-          accountCode: "20200305" + i + this.accountActive,
-          accountStatus: "待确定"
-        };
-        this.accountList.push(listItem);
-      }
+    onLoad(){//加载数据
+      this.limit++;
+      this.axios
+        .get(this.url, {
+          headers: {
+            'token': '1',
+          },
+          params: {
+            year:this.accountYear,
+            limit: this.limit,
+            page:10
+          }
+        })
+        .then(response => {
+          console.log(response);
+          // 加载状态结束
+          this.loading = false;
+          
+          if(this.accountActive===0){
+            var responseList=[{//模拟数据
+              stateStatus: 0, 
+              stateDateStr: null, 
+              stateOrderId: '202003260001', 
+              stateDate: "202003"
+            }]
+            this.list = this.billBindingValue(responseList)
+          }else if(this.accountActive===1){
+            var responseList=[{//模拟数据
+              fileStatus: 0, 
+              stateOrderId: '202003260001', 
+              stateDate: '202003'
+            }]
+            this.list = this.fileBindingValue(responseList)
+          }
+          
+          // this.list = response.data.data.list;
+          // this.list=[{orderDate:'2020-04-22',orderNo:'20200422',expireTime:'2020-04-22'}];
+          // if(response.data.data.total>=this.list.length){
+          this.finished = true;
+          // }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    billBindingValue(array){//待确认订单对象绑定值
+      var returnArray = new Array();
+      array.forEach(obj =>{
+        let item = {
+          billMonth:obj.stateDate,//账单月份
+          billNo:obj.stateOrderId,//账单号
+          billStatus:obj.stateStatus==0?'未确认':value==1?'已确认':value==2?'已失效':'',//订单状态
+          billMonthFormat:obj.stateDateStr,//账单月份格式化（yyyy年mm月）
+        }
+        returnArray.push(item);
+      });
+      return returnArray;
+    },
+    fileBindingValue(array){//账单文件上传对象绑定值
+      var returnArray = new Array();
+      array.forEach(obj =>{
+        let item = {
+          billMonth:obj.stateDate,//账单月份
+          billNo:obj.stateOrderId,//账单号
+          billStatus:obj.fileStatus==0?'未上传':value==1?'已上传':'',//订单状态
+          billMonthFormat:'',//账单月份格式化（yyyy年mm月）
+        }
+        returnArray.push(item);
+      });
+      return returnArray;
     },
     onConfirm(value) {
       this.accountYear = this.formatDate(value);
@@ -111,7 +178,8 @@ export default {
     },
     //更具年份查询
     searchAccount(){
-
+      this.loading=true,
+      this.onLoad();
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -119,14 +187,14 @@ export default {
   props: ["parentActive"],
   created() {
     //默认等于当前年份
-    this.accountYear = this.formatDate(new Date());
+    this.accountYear =this.formatDate(new Date())
     if(this.accountActive===0){
       this.routerPath='/AccountMain/AccountInfo/';
+      this.url = '/api/supplier/state/getStateOrderInfoList'
     }else if(this.accountActive===1){
       this.routerPath='/AccountMain/AccountUploader/';
+      this.url = '/api/supplier/state/getStateOrderFileList'
     }
-    console.log(this.accountActive);
-    this.getAccountData();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

@@ -45,7 +45,7 @@
         <div>
           <van-row type="flex" justify="center">
             <van-col span="23">
-              <van-uploader v-model="fileList" multiple :max-count="4" />
+              <van-uploader v-model="item.fileList" multiple :max-count="4" />
             </van-col>
           </van-row>
         </div>
@@ -108,7 +108,7 @@
       </van-row>
       <van-row type="flex" justify="center">
         <van-col span="23">
-          <van-button round type="primary" block @click="shipmentSubmit">发货提交</van-button>
+          <van-button round type="primary" block :disabled="btnStatus === 1" @click="shipmentSubmit">发货提交</van-button>
         </van-col>
       </van-row>
     </div>
@@ -128,7 +128,6 @@ export default {
     //这里存放数据
     return {
       deliveryIds:[],//父页面选中的发货订单ID数组
-      fileList: [],//附件列表
       entiretyList:[],//整单发货商品明细列表
       shipmentDect: "",
       distributionValue: "", //配送方式
@@ -136,7 +135,8 @@ export default {
       distributionShowPicker: false, //配送方式下拉显示控制
       currentDate: new Date(),
       dateTimeValue: "",
-      dateTimeShowPicker: false //预计到货时间显示隐藏
+      dateTimeShowPicker: false, //预计到货时间显示隐藏
+      btnStatus:0,//按钮状态
     };
   },
   //监听属性 类似于data概念
@@ -157,7 +157,7 @@ export default {
           }
         })
         .then(response => {
-          console.log(response);
+          // console.log(response);
           var array = [
             {
               deliveryId: "bfb5c5f631fc43cc85b6ca669b5f933a", 
@@ -169,11 +169,21 @@ export default {
               matterDesc: "描述", 
               finishNum: 0, 
               matterName: "手机下单测试物料"
+            },
+            {
+              deliveryId: "bfb5c5f631fc43cc85b6ca669b5f932b", 
+              address: "地址AAAAAA", 
+              matterUtil: "箱", 
+              detailId: "2268760760bf4651850a588ff7f2cb92", 
+              id: 8, 
+              matterNum: 0, 
+              matterDesc: "描述", 
+              finishNum: 0, 
+              matterName: "测试物料名称"
             }
           ]
           this.entiretyList = this.objectBindingValue(array);
           console.log(this.entiretyList);
-          
         })
         .catch(error => {
           console.log(error);
@@ -181,7 +191,7 @@ export default {
     },
     objectBindingValue(array){//对象绑定值
       var returnArray = new Array();
-      array.forEach(function(obj){
+      array.forEach(obj =>{
         let item = {
           productId:obj.detailId,//产品ID
           productName:obj.matterName,//产品名称
@@ -192,6 +202,7 @@ export default {
           thisProductNub:'',//本次发货数量
           unit:obj.matterUtil,//单位
           checked:false,//是否发全
+          fileList:[],//附件列表
           predictAOG_date:'',//预计到货时间
           distribution:'',//配送方式
           productDESC:''//备注说明
@@ -223,6 +234,7 @@ export default {
       let distributionValue = this.distributionValue;
       let shipmentDect = this.shipmentDect;
       var dataArr = new Array()
+      var files = new Array()
       this.entiretyList.forEach(function (obj){
         let item = {
           deliveryId:obj.orderCode,//发货单id 		
@@ -234,9 +246,9 @@ export default {
           description:shipmentDect	//描述
         }
         dataArr.push(item);
+        files.push(obj.fileList);
       })
       console.log(dataArr);
-      
       this.axios.post('/api/supplier/delivery/updateDeliveryOrderDetail',dataArr
         ,{
           headers: {
@@ -244,15 +256,15 @@ export default {
             operatorId:"1"
           }
         }
-      ).then(function (response) {
-        console.log(response);
+      ).then(response =>{
+        this.btnStatus = 1;
         Toast.success('发货提交成功');
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error);
         Toast.fail('发货提交失败');
       });
-    }
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {

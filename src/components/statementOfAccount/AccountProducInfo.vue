@@ -75,17 +75,7 @@ export default {
   //方法集合
   methods: {
     getAccountProductInfoData(){
-      for (let i = 0; i < 26; i++) {
-        let listItem = {
-          productId: i,
-          deliveryDate:'2020-03-01',
-          deliveryNum:100+i,
-          unit:'千克',
-          price:0.00001,
-          money:1000+i
-        };
-        this.productList.push(listItem);
-      }
+      
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）

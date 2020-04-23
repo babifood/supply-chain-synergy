@@ -65,10 +65,10 @@
     >
       <van-row type="flex" justify="center" align="center">
         <van-col span="12">
-          <van-notice-bar :scrollable="false" color="#000000" background="#fff">{{item.productName}}</van-notice-bar>
+          <van-notice-bar :scrollable="false" color="#000000" background="#fff">{{item.matterName}}</van-notice-bar>
         </van-col>
-        <van-col span="5">{{item.productNum}}</van-col>
-        <van-col span="5">{{item.productSum}}</van-col>
+        <van-col span="5">{{item.matterNum}}</van-col>
+        <van-col span="5">{{item.stateAmount}}</van-col>
         <van-col span="1">
           <van-icon name="arrow" />
         </van-col>
@@ -88,6 +88,7 @@ export default {
   data() {
     //这里存放数据
     return {
+
       showAccessory: false, //附件查看组件显影
       accountImages: [
         "https://img.yzcdn.cn/1.jpg",
@@ -113,17 +114,45 @@ export default {
     accountAffirm() {},
     //账单下载
     accountDownload() {},
+    //获取对账明细信息
     getAccountInfoData() {
-      for (let i = 0; i < 26; i++) {
-        let listItem = {
-          productId: i,
-          productName: "物料名称XXXXXXXX" + i,
-          productNum: 100 + i,
-          productSum: 1000 + 1
-        };
-        this.accountProductList.push(listItem);
-      }
+      // for (let i = 0; i < 26; i++) {
+      //   let listItem = {
+      //     productId: i,
+      //     productName: "物料名称XXXXXXXX" + i,
+      //     productNum: 100 + i,
+      //     productSum: 1000 + 1
+      //   };
+      //   this.accountProductList.push(listItem);
+      // }
+      this.axios
+        .get('/api/supplier/state/getStateOrderDetailList', {
+          headers: {
+            'token': '1',
+          },
+          params: {
+            stateOrderId:this.$route.params.orderId,
+            yearMonth:this.$route.params.billMonth
+          }
+        })
+        .then(rep => {
+          console.log(rep);
+          this.compName = rep.data.data.supplierName;
+          this.billMonth = rep.data.data.stateDate;
+          this.billCode = rep.data.data.stateOrderId;
+          this.totalAmountPayable = rep.data.data.sumPayable;
+          this.currency = rep.data.data.currency;
+          this.monthlyDeductions = rep.data.data.monthWithhold;
+          this.actualMoney = rep.data.data.actualSum;
+          this.accountProductList = rep.data.data.matterList;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
+    // onLoad(){
+
+    // }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {

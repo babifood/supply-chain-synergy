@@ -83,7 +83,7 @@ export default new Router({
       component: AccountMain
     },
     {
-      path: '/AccountMain/AccountInfo/:accountId',
+      path: '/AccountMain/AccountInfo/:orderId/:billMonth',
       name: 'AccountInfo',
       component: AccountInfo
     },

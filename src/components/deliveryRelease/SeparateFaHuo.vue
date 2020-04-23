@@ -19,10 +19,10 @@
       </van-row>
       <van-row>
         <van-col span="12">
-          <van-field label="订单数量:" :value="item.orderNum" label-width="65px" type="number" disabled />
+          <van-field label="订单数量:" :value="item.productNub+item.unit" label-width="65px" type="number" disabled />
         </van-col>
         <van-col span="12">
-          <van-field label="已发货:" :value="item.numOfissued" label-width="65px" type="number" disabled />
+          <van-field label="已发货:" :value="item.sentProductNub" label-width="65px" type="number" disabled />
         </van-col>
       </van-row>
       <van-row>
@@ -32,7 +32,7 @@
             label-width="65px"
             type="number"
             required
-            v-model="item.thisShipmentNum"
+            v-model="item.thisProductNub"
             placeholder="请输入数量"
             @blur="thisShipmentBlur(item.productId)"
           />
@@ -56,7 +56,7 @@
             readonly
             clickable
             label="预计到货时间:"
-            v-model="item.dateTimeValue"
+            v-model="item.predictAOG_date"
             placeholder="请选择到货时间"
             @click="clickDateTimeShowPicker(index)"
           />
@@ -76,7 +76,7 @@
             readonly
             clickable
             label="配送方式:"
-            v-model="item.distributionValue"
+            v-model="item.distribution"
             placeholder="请选择配送方式"
             @click="clickDistributionShowPicker(index)"
           />
@@ -93,7 +93,7 @@
       <van-row>
         <van-col span="24">
           <van-field
-            v-model="item.shipmentDect"
+            v-model="item.productDESC"
             rows="2"
             autosize
             label="发货说明:"
@@ -104,7 +104,7 @@
       </van-row>
       <van-row type="flex" justify="center">
         <van-col span="23">
-          <van-button round type="primary" block @click="shipmentSubmit(item.productId)">发货提交</van-button>
+          <van-button round type="primary" block :disabled="item.btnStatus === 1" @click="shipmentSubmit(item.productId)">发货提交</van-button>
         </van-col>
       </van-row>
       <van-divider :style="{ color: 'chocolate', borderColor: 'chocolate'}"></van-divider>
@@ -115,62 +115,22 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
+import qs from 'qs'
 import moment from "moment"; //导入日期格式化
+import { Toast } from "vant";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
     return {
+      deliveryIds:[],//父页面选中的发货订单ID数组
       distributionColumns: ["集装箱卡车", "快递配送"], //配送方式选择
       distributionShowPicker: false, //配送方式下拉显示控制
       currentDate: new Date(),
       dateTimeShowPicker: false, //预计到货时间显示隐藏
       pitchOnIndex:null,//选中的下标
-      shipmentList: [
-        {
-          productId:1,
-          productName:'阳政线馒头切刀轴YJ-1510L(切刀座+切刀杆)',//产品名称
-          orderCode:'4500000001',//订单编号
-          address:'上海市松江区茸江路789号',//配送地址
-          orderNum:3000,//订单数量
-          numOfissued:2000,//已发货数
-          thisShipmentNum:null,//本次发货
-          checked:false,//是否发全
-          fileList: [],//附件列表
-          dateTimeValue: "",//预计到货时间
-          distributionValue: "", //配送方式
-          shipmentDect:''//备注
-        },
-        {
-          productId:2,
-          productName:'阳政线馒头切刀轴YJ-1510L(切刀座+切刀杆)',//产品名称
-          orderCode:'4500000002',//订单编号
-          address:'上海市松江区茸江路789号',//配送地址
-          orderNum:3000,//订单数量
-          numOfissued:2000,//已发货数
-          thisShipmentNum:null,//本次发货
-          checked:false,//是否发全
-          fileList: [],//附件列表
-          dateTimeValue: "",//预计到货时间
-          distributionValue: "", //配送方式
-          shipmentDect:''//备注
-        },
-        {
-          productId:3,
-          productName:'阳政线馒头切刀轴YJ-1510L(切刀座+切刀杆)',//产品名称
-          orderCode:'4500000002',//订单编号
-          address:'上海市松江区茸江路789号',//配送地址
-          orderNum:3000,//订单数量
-          numOfissued:2000,//已发货数
-          thisShipmentNum:null,//本次发货
-          checked:false,//是否发全
-          fileList: [],//附件列表
-          dateTimeValue: "",//预计到货时间
-          distributionValue: "", //配送方式
-          shipmentDect:''//备注
-        }
-      ]
+      shipmentList: []
     };
   },
   //监听属性 类似于data概念
@@ -179,10 +139,78 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    //加载订单产品数据
+    loadOrdeProduct(){
+      this.axios
+        .get("/api/supplier/delivery/getDeliveryOrderList", {
+          headers: {
+            'token': '1',
+          },
+          params: {
+            deliveryIds:qs.stringify(this.deliveryIds)
+          }
+        })
+        .then(response => {
+          console.log(response);
+          var array = [
+            {
+              deliveryId: "bfb5c5f631fc43cc85b6ca669b5f933a", 
+              address: "地址", 
+              matterUtil: "筐", 
+              detailId: "2268760760bf4651850a588ff7f2cb91", 
+              id: 6, 
+              matterNum: 0, 
+              matterDesc: "描述", 
+              finishNum: 0, 
+              matterName: "手机下单测试物料"
+            },
+            {
+              deliveryId: "bfb5c5f631fc43cc85b6ca669b5f932b", 
+              address: "地址AAAAAA", 
+              matterUtil: "箱", 
+              detailId: "2268760760bf4651850a588ff7f2cb92", 
+              id: 8, 
+              matterNum: 0, 
+              matterDesc: "描述", 
+              finishNum: 0, 
+              matterName: "测试物料名称"
+            }
+          ]
+          this.shipmentList = this.objectBindingValue(array);
+          console.log(this.shipmentList);
+          
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    objectBindingValue(array){//对象绑定值
+      var returnArray = new Array();
+      array.forEach(function(obj){
+        let item = {
+          productId:obj.detailId,//产品ID
+          productName:obj.matterName,//产品名称
+          orderCode:obj.id,//订单号
+          address:obj.address,//交货地址
+          productNub:obj.matterNum,//订单数量
+          sentProductNub:obj.finishNum,//已发产品数量
+          thisProductNub:null,//本次发货数量
+          unit:obj.matterUtil,//单位
+          checked:false,//是否发全
+          fileList:[],//附件列表
+          predictAOG_date:'',//预计到货时间
+          distribution:'',//配送方式
+          productDESC:'',//备注说明
+          btnStatus:0//按钮状态
+        }
+        returnArray.push(item);
+      });
+      return returnArray;
+    },
     thisShipmentBlur(productId) {
       //本次发货失去焦点事件
       let en = this.shipmentList.find(item => item.productId===productId);
-      if((parseFloat(en.numOfissued) + parseFloat(en.thisShipmentNum))>= parseFloat(en.orderNum)){
+      if((parseFloat(en.sentProductNub) + parseFloat(en.thisProductNub))>= parseFloat(en.productNub)){
         en.checked = true;
       }else{
         en.checked = false;
@@ -193,7 +221,7 @@ export default {
       this.dateTimeShowPicker = true;
     },
     onDateTimeConfirm(value) {
-      this.shipmentList[this.pitchOnIndex].dateTimeValue = moment(value).format("YYYY-MM-DD HH:mm");
+      this.shipmentList[this.pitchOnIndex].predictAOG_date = moment(value).format("YYYY-MM-DD HH:mm");
       this.dateTimeShowPicker = false;
       this.pitchOnIndex = null;
     },
@@ -203,22 +231,52 @@ export default {
     },
     onConfirm(value) {
       //配送方式下拉选择
-      this.shipmentList[this.pitchOnIndex].distributionValue=value
+      this.shipmentList[this.pitchOnIndex].distribution=value
       this.distributionShowPicker = false;
       this.pitchOnIndex = null;
     },
     shipmentSubmit(productId) {
       //发货提交
+      let en = this.shipmentList.find(item => item.productId===productId); 
+      var dataArr = new Array()
+      var files = en.fileList;//附件列表
+      let item = {
+        deliveryId:en.orderCode,//发货单id 		
+        detailId:en.productId,//发货详细id	
+        expectTime:en.predictAOG_date,//预计到货时间 		
+        matterNum:en.thisProductNub,//物料数量 	
+        matterUtil:en.unit,//物料单位 	 		
+        shippingMethod:en.distribution,//配送类型 
+        description:en.productDESC	//描述
+      }
+      dataArr.push(item);
+      this.axios.post('/api/supplier/delivery/updateDeliveryOrderDetail',dataArr
+        ,{
+          headers: {
+            token: "1",
+            operatorId:"1"
+          }
+        }
+      ).then(response => {
+        console.log(response);
+        en.btnStatus = 1;//点击成功后按钮设置禁用
+        Toast.success('发货提交成功');
+      })
+      .catch(error => {
+        console.log(error);
+        Toast.fail('发货提交失败');
+      });
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
-  //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
+  created() {
     //获取路由参数(勾选的订单ID号数组)
-    console.log(this.$route.params);
-    console.log(this.shipmentList);
+    //获取路由参数(勾选的订单ID号数组)
+    this.deliveryIds = this.$route.query.orders;
+    this.loadOrdeProduct();
   },
+  //生命周期 - 挂载完成（可以访问DOM元素）
+  mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前

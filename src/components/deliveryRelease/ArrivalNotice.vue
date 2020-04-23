@@ -6,7 +6,7 @@
       <div class="search_head">
         <van-row type="flex" justify="center">
           <van-col span="10">
-            <van-field v-model="supplierName" label="供应商:" placeholder="请输入供应商" label-width="60" />
+            <van-field v-model="supplier" label="供应商:" placeholder="请输入供应商" label-width="60" />
           </van-col>
           <van-col span="10">
             <van-field v-model="storageLocation" label="库位:" placeholder="请输入库位号" label-width="60" />
@@ -47,15 +47,15 @@
       </div>
     </van-sticky>
     <!-- 到货通知列表 -->
-    <div class="arrivalNotice_list" v-for="item in arrivalNoticeList" :key="item.arrivalNoticeId">
+    <div class="arrivalNotice_list" v-for="(item,index) in arrivalNoticeList" :key="index">
       <van-cell-group>
-        <van-field label="到货日期:" :value="item.deliveryDate" disabled />
-        <van-field label="订单号:" :value="item.orderCode" disabled />
-        <van-field label="物料名称:" :value="item.productName" disabled />
-        <van-field label="供应商:" :value="item.supplier" disabled />
-        <van-field label="到货数量:" :value="item.deliveryNum" disabled />
-        <van-field label="到货方式:" :value="item.deliveryMode" disabled />
-        <van-field type="textarea" label="发货说明:" :value="item.deliverGoodsDect" disabled />
+        <van-field label="到货日期:" :value="item.arrivalDate" disabled />
+        <van-field label="订单号:" :value="item.arrivalOrderId" disabled />
+        <van-field label="物料名称:" :value="item.matterName" disabled />
+        <van-field label="供应商:" :value="item.supplierName" disabled />
+        <van-field label="到货数量:" :value="item.matterNum+item.matterUtil" disabled />
+        <van-field label="到货方式:" :value="item.shippingMethod" disabled />
+        <van-field type="textarea" label="发货说明:" :value="item.matterDesc" disabled />
       </van-cell-group>
     </div>
   </div>
@@ -72,7 +72,7 @@ export default {
   data() {
     //这里存放数据
     return {
-      supplierName: "", //供应商名称
+      supplier: "", //供应商
       storageLocation: "", //库位
       begDateVal: "", //开始时间
       endDateVal: "", //结束时间
@@ -100,19 +100,52 @@ export default {
       this.showEndCalendar = false;
     },
     searchArrivalNotice() {
-      for (let i = 0; i < 30; i++) {
-          let arrivalNoticeItem = {
-            arrivalNoticeId: i,
-            deliveryDate:'2020.02.26',
-            orderCode: "4500000000"+i,
-            productName: "阳政线馒头切刀轴YJ-1510L(切刀座+切刀杆)",//产品名称
-            supplier:'上海*****有限公司',
-            deliveryNum: 3000,
-            deliveryMode :"集装箱卡车",//运送方式
-            deliverGoodsDect :"发货说明发货说明发货说明发货说明发货说明发货说明发货说明" //发货说明
-          };
-          this.arrivalNoticeList.push(arrivalNoticeItem);
-      } 
+      // for (let i = 0; i < 30; i++) {
+      //     let arrivalNoticeItem = {
+      //       arrivalNoticeId: i,
+      //       deliveryDate:'2020.02.26',
+      //       orderCode: "4500000000"+i,
+      //       productName: "阳政线馒头切刀轴YJ-1510L(切刀座+切刀杆)",//产品名称
+      //       supplier:'上海*****有限公司',
+      //       deliveryNum: 3000,
+      //       deliveryMode :"集装箱卡车",//运送方式
+      //       deliverGoodsDect :"发货说明发货说明发货说明发货说明发货说明发货说明发货说明" //发货说明
+      //     };
+      //     this.arrivalNoticeList.push(arrivalNoticeItem);
+      // } 
+      this.axios
+        .get("/api/supplier/arrival/getArrivalOrderInfoList", {
+          headers: {
+            'token': '1',
+          },
+          params: {
+            supplierCode:this.supplier, 	//供应商编码
+            locator:this.storageLocation, 	//库位 
+            startDate:this.begDateVal, //开始日期	yyyy-MM-dd 	
+            endDate:this.endDateVal //结束日期	yyyy-MM-dd 	
+          }
+        })
+        .then(response => {
+          // console.log(response);
+          var array = [
+            {
+              supplierName: "1", 
+              matterUtil: "matterUtil", 
+              arrivalOrderId: 1, 
+              shippingMethod: "shippingMethod", 
+              description: "", 
+              matterNum: 0, 
+              matterDesc: null, 
+              arrivalDate: null, 
+              matterName: "matterName"
+            }
+          ]
+          this.arrivalNoticeList = array
+          console.log(this.arrivalNoticeList);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
