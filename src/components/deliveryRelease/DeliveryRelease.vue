@@ -108,7 +108,7 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      limit:0,
+    
       begDateVal: "",
       endDateVal: "",
       showBegCalendar: false,
@@ -146,7 +146,6 @@ export default {
       //     this.finished = true;
       //   }
       // }, 1000);
-      this.limit++;
       this.axios
         .get("/api/supplier/delivery/getDeliveryOrderList", {
           headers: {

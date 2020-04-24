@@ -66,12 +66,16 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import moment from 'moment'//导入日期格式化
+import { Toast } from "vant";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
     return {
+      //请求参数
+      aptitudeId:this.$route.params.aptitudeId,
+
       aptitudeName: "证件名称1",
       begDate: "2020-03-03",
       endDate: "2020-03-31",
@@ -88,6 +92,22 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    //获取供应商详情
+    getAptitudeinfo(){
+      this.axios.get("/api/supplier/provider/getProviderCertificateInfo", {
+          headers: {
+            'token': "1",
+          },
+          params: {
+            certificateId:this.aptitudeId
+          }
+      }).then(res => {
+        console.log(res);
+          
+      }).catch(error => {
+        console.log(error);
+      });
+    },
     formatDate(date) {
       return moment(date).format("YYYY-MM-DD");
       // return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
@@ -101,11 +121,38 @@ export default {
       this.showEndCalendar = false;
     },
     submit(){
-        
+      if(this.newEndDate == ''&& this.newBegDate == ''){
+          Toast.fail('日期不能为空');
+      }else{
+        this.axios.post('/api/supplier/provider/updateProviderCertificateInfo',
+          {
+            'certificateId': this.aptitudeId,
+            'endDate': this.newEndDate,
+            'imageUrl': '1',//参数格式不匹配
+            'startDate': this.newBegDate
+          },{
+            headers: {
+              token: '1',
+              operatorId : '1'
+            }
+          }
+        ).then(function (res) {
+          console.log(res);
+          Toast.success('资质提交成功');
+        })
+        .catch(function (error) {
+          console.log(error);
+          Toast.fail('资质提交失败');
+        });
+      }
+      
+      
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.getAptitudeinfo();
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前

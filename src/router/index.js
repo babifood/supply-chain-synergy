@@ -83,17 +83,17 @@ export default new Router({
       component: AccountMain
     },
     {
-      path: '/AccountMain/AccountInfo/:orderId/:billMonth',
+      path: '/AccountMain/AccountInfo/:orderId/:billMonth/:sataus',
       name: 'AccountInfo',
       component: AccountInfo
     },
     {
-      path: '/AccountMain/AccountInfo/AccountProducInfo/:productId',
+      path: '/AccountMain/AccountInfo/AccountProducInfo/:productId/:orderId/:billMonth',
       name: 'AccountProducInfo',
       component: AccountProducInfo
     },
     {
-      path: '/AccountMain/AccountUploader/:accountId',
+      path: '/AccountMain/AccountUploader/:orderId/:billMonth/:sataus',
       name: 'AccountUploader',
       component: AccountUploader
     },

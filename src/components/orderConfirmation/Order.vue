@@ -47,7 +47,6 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      limit : 0,
     };
   },
   //监听属性 类似于data概念
@@ -58,17 +57,16 @@ export default {
   methods: {
     onLoad() {
       // 异步更新数据
-      this.limit++;
       this.axios
         .get("/api/supplier/order/getOrderInfoList", {
           headers: {
             'token': '1',
             'supplierCode':'1'
           },
-          params: {
-            limit: this.limit,
-            page:10
-          }
+          // params: {
+          //   limit: this.limit,
+          //   page:10
+          // }
         })
         .then(response => {
           console.log(response);

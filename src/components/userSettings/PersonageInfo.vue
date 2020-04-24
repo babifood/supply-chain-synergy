@@ -29,8 +29,8 @@
           <van-field name="radio" label="性别:">
             <template #input>
               <van-radio-group v-model="gender" direction="horizontal" disabled>
-                <van-radio name="1" label-disabled>男</van-radio>
-                <van-radio name="2" label-disabled>女</van-radio>
+                <van-radio name="0" label-disabled>男</van-radio>
+                <van-radio name="1" label-disabled>女</van-radio>
               </van-radio-group>
             </template>
           </van-field>
@@ -78,15 +78,41 @@ export default {
     //资料修改
     InfoModification() {
       console.log("调用");
-
       this.$router.push({
         path: "/InfoModification"
-        ,query: { params: this.userId}
       });
+      // this.$router.push({
+      //   path: "/InfoModification"
+      //   ,query: { params: this.userId}
+      // });
+    },
+    getPersonageInfo(){
+      this.axios
+        .get("/api/supplier/home/getUserInfo", {
+          headers: {
+            'token': '1',
+            'operatorId':'1'
+          }
+          // params: {
+          //   operatorId: '操作人ID'
+          // }
+        })
+        .then(res=> {
+          console.log(res);
+          this.compName = res.data.data.companyName;
+          this.phone = res.data.data.mobile;
+          this.gender = res.data.data.sex+'';
+          this.name = res.data.data.username;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.getPersonageInfo();
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前

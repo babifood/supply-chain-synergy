@@ -53,7 +53,7 @@ export default {
   //方法集合
   methods: {
     getAptitudeData() {
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 1; i++) {
         let listItem = {
           aptitudeId: i,
           aptitudeName: "证件名称" + i,
@@ -63,6 +63,19 @@ export default {
         };
         this.aptitudeList.push(listItem);
       }
+      this.axios.get("/api/supplier/provider/getProviderCertificateInfo", {
+          headers: {
+            'token': "1",
+            'supplierCode': "1"
+          },
+          // params: {
+          // }
+      }).then(res => {
+        console.log(res);
+          
+      }).catch(error => {
+        console.log(error);
+      });
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -83,13 +96,13 @@ export default {
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
 .list_head {
-    height: 40px;
-    line-height: 40px;
-    background-color: #fff;
-  }
-  .list_item {
-    height: 40px;
-    line-height: 40px;
-    font-size: 14px;
-  }
+  height: 40px;
+  line-height: 40px;
+  background-color: #fff;
+}
+.list_item {
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+}
 </style>

@@ -59,9 +59,9 @@
     <router-link
       class="list_item"
       v-for="item in accountProductList"
-      :key="item.productId"
+      :key="item.matterId"
       tag="div"
-      :to="'/AccountMain/AccountInfo/AccountProducInfo/'+item.productId"
+      :to="'/AccountMain/AccountInfo/AccountProducInfo/'+item.matterId+'/'+orderId+'/'+billMonth"
     >
       <van-row type="flex" justify="center" align="center">
         <van-col span="12">
@@ -88,7 +88,10 @@ export default {
   data() {
     //这里存放数据
     return {
-
+      //请求参数
+      orderId:this.$route.params.orderId,
+      billMonth:this.$route.params.billMonth,
+      
       showAccessory: false, //附件查看组件显影
       accountImages: [
         "https://img.yzcdn.cn/1.jpg",
@@ -131,8 +134,8 @@ export default {
             'token': '1',
           },
           params: {
-            stateOrderId:this.$route.params.orderId,
-            yearMonth:this.$route.params.billMonth
+            stateOrderId:this.orderId,
+            yearMonth:this.billMonth
           }
         })
         .then(rep => {

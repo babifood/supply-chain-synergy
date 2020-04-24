@@ -46,7 +46,7 @@
         v-for="item in list "
         :key="item.stateOrderId"
         tag="div"
-        :to="routerPath+item.billNo+'/'+item.billMonth"
+        :to="routerPath+item.billNo+'/'+item.billMonth+'/'+item.billStatusVle"
       >
         <van-row type="flex" justify="center">
           <van-col span="7">{{item.billMonth}}</van-col>
@@ -84,7 +84,6 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      limit : 0,
     };
   },
   //监听属性 类似于data概念
@@ -102,7 +101,6 @@ export default {
       return moment(date).format("YYYY");
     },
     onLoad(){//加载数据
-      this.limit++;
       this.axios
         .get(this.url, {
           headers: {
@@ -153,6 +151,7 @@ export default {
           billMonth:obj.stateDate,//账单月份
           billNo:obj.stateOrderId,//账单号
           billStatus:obj.stateStatus==0?'未确认':value==1?'已确认':value==2?'已失效':'',//订单状态
+          billStatusVle:obj.stateStatus,
           billMonthFormat:obj.stateDateStr,//账单月份格式化（yyyy年mm月）
         }
         returnArray.push(item);
@@ -166,6 +165,7 @@ export default {
           billMonth:obj.stateDate,//账单月份
           billNo:obj.stateOrderId,//账单号
           billStatus:obj.fileStatus==0?'未上传':value==1?'已上传':'',//订单状态
+          billStatusVle:obj.fileStatus,
           billMonthFormat:'',//账单月份格式化（yyyy年mm月）
         }
         returnArray.push(item);

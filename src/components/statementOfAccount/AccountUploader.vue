@@ -66,13 +66,17 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import { Toast } from "vant";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
     return {
+      //请求参数
+      orderId:this.$route.params.orderId,
+      fileSataus:this.$route.params.status,
+
       showAccessory: false, //附件查看组件显影
       accountImages: [
         "https://img.yzcdn.cn/1.jpg",
@@ -98,11 +102,46 @@ export default {
   methods: {
     submit(){
       console.log(this.billFileList);
+    },
+    //获取附件数据
+    getAccessoryData(){
+      this.axios.get("/api/supplier/state/getStateOrderFileDetail", {
+          headers: {
+            'token': "1"
+          },
+          params: {
+            stateOrderId: this.orderId,
+            fileStatus:this.fileSataus
+          }
+      }).then(res => {
+        console.log(res);
+        if(res.data.data == null){
+          Toast.fail(res.data.msg);
+        }else{
+          this.compName = res.data.data.supplierName; //对账单位
+          this.billMonth = res.data.data.stateDate; //账单月份
+          this.billCode = res.data.data.stateOrderId; //账单单号
+          this.totalAmountPayable = res.data.data.sumPayable; //应付总金额
+          this.currency = res.data.data.currency; //币种
+          this.monthlyDeductions = res.data.data.monthWithhold; //月度扣款总额
+          this.actualMoney = res.data.data.actualSum;//实际货款
+          //更具后台返回的文件数组来组织对应的文件数组
+          this.fileConvertTypeListFile(res.data.data.fileInfoMap.str)
+        }  
+      }).catch(error => {
+        console.log(error);
+      });
+    },
+    fileConvertTypeListFile(fileList){
+      fileList.forEach(obj =>{
+        console.log(obj);
+      })
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    
+    // console.log(this.$route.params);
+    this.getAccessoryData();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

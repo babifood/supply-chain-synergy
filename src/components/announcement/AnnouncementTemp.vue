@@ -13,33 +13,35 @@
       </div>
     </van-sticky>
     <!-- 公告内容列表 -->
-    <router-link
-      class="list_item"
-      v-for="item in announcementList"
-      :key="item.announcementId"
-      tag="div"
-      :to="'/Announcement/AnnouncementInfo/'+item.announcementId"
-    >
-      <van-row type="flex" justify="center">
-        <van-col span="2">
-          <van-tag round type="danger" v-show="item.announcementStatus">新</van-tag>
-        </van-col>
-        <van-col span="5">{{item.announcementDate}}</van-col>
-        <van-col span="15">
-          <van-notice-bar
-            :scrollable="false"
-            color="#000000"
-            background="#fff"
-          >{{item.announcementTitle}}</van-notice-bar>
-        </van-col>
-        <van-col span="2">
-          <div>
-            <van-icon name="arrow" />
-          </div>
-        </van-col>
-      </van-row>
-      <div class="van-hairline--bottom"></div>
-    </router-link>
+    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <router-link
+        class="list_item"
+        v-for="item in announcementList"
+        :key="item.announcementId"
+        tag="div"
+        :to="'/Announcement/AnnouncementInfo/'+item.announcementId"
+      >
+        <van-row type="flex" justify="center">
+          <van-col span="2">
+            <van-tag round type="danger" v-show="item.announcementStatus">新</van-tag>
+          </van-col>
+          <van-col span="5">{{item.announcementDate}}</van-col>
+          <van-col span="15">
+            <van-notice-bar
+              :scrollable="false"
+              color="#000000"
+              background="#fff"
+            >{{item.announcementTitle}}</van-notice-bar>
+          </van-col>
+          <van-col span="2">
+            <div>
+              <van-icon name="arrow" />
+            </div>
+          </van-col>
+        </van-row>
+        <div class="van-hairline--bottom"></div>
+      </router-link>
+    </van-list>
     <!-- 选中公告详情 -->
     <!-- <div class="announcement_text">
       <van-cell-group>
@@ -65,6 +67,10 @@ export default {
   data() {
     //这里存放数据
     return {
+      list: [],
+      loading: false,
+      finished: false,
+
       announcementList: [],
       active: this.parentActive, //公告类型
       announcementTitle: "公告标题",
@@ -77,18 +83,40 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    getAnnouncementData() {
-      for (let i = 0; i < 10; i++) {
-        let listItem = {
-          announcementId: i,
-          announcementDate: "2020.02.26",
-          announcementTitle: "中饮巴比食品股份公司公告" + this.active,
-          announcementText: "2020.02.26",
-          announcementFile: "",
-          announcementStatus: true
-        };
-        this.announcementList.push(listItem);
-      }
+    // getAnnouncementData() {
+    //   for (let i = 0; i < 10; i++) {
+    //     let listItem = {
+    //       announcementId: i,
+    //       announcementDate: "2020.02.26",
+    //       announcementTitle: "中饮巴比食品股份公司公告" + this.active,
+    //       announcementText: "2020.02.26",
+    //       announcementFile: "",
+    //       announcementStatus: true
+    //     };
+    //     this.announcementList.push(listItem);
+    //   }
+    // }
+    onLoad(){
+      this.axios.get("/api/supplier/message/getMessageNotifyInfoList", {
+          headers: {
+            'token': '1',
+            'supplierCode':'1'
+          },
+          params: {
+            messageCode:this.active
+          }
+      }).then(res => {
+        console.log(res);
+          // 加载状态结束
+        this.loading = false;
+          // this.list = response.data.data.list;
+        // this.list=[{orderDate:'2020-04-22',orderNo:'20200422',expireTime:'2020-04-22'}];
+        // if(response.data.data.total>=this.list.length){
+          this.finished = true;
+        // }  
+      }).catch(error => {
+        console.log(error);
+      });
     }
   },
   //接收父主键传的值
@@ -96,7 +124,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     console.log(this.active);
-    this.getAnnouncementData();
+    // this.getAnnouncementData();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

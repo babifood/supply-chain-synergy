@@ -37,36 +37,46 @@
       </div>
       <div class="van-hairline--bottom"></div>
     </van-sticky>
-    <div class="list_item" v-for="item in productList" :key="item.productId">
-      <van-row type="flex" justify="center" align="center">
-        <van-col span="5">{{item.deliveryDate}}</van-col>
-        <van-col span="5">{{item.deliveryNum}}</van-col>
-        <van-col span="3">{{item.unit}}</van-col>
-        <van-col span="5">{{item.price}}</van-col>
-        <van-col span="5">{{item.money}}</van-col>
-      </van-row>
-      <div class="van-hairline--bottom"></div>
-    </div>
+    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <div class="list_item" v-for="(item,index) in productList" :key="index">
+        <van-row type="flex" justify="center" align="center">
+          <van-col span="5">{{item.deliveryDate}}</van-col>
+          <van-col span="5">{{item.matterNum}}</van-col>
+          <van-col span="3">{{item.matterUtil}}</van-col>
+          <van-col span="5">{{item.matterPrice}}</van-col>
+          <van-col span="5">{{item.stateAmount}}</van-col>
+        </van-row>
+        <div class="van-hairline--bottom"></div>
+      </div>
+    </van-list>
   </div>
 </template>
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import { Toast } from "vant";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
     return {
+      //请求参数
+      billMonth:this.$route.params.billMonth,
+      orderId:this.$route.params.orderId,
+      productId:this.$route.params.productId,
+      //数据列表
+      productList: [],//产品列表集合
+      loading: false,
+      finished: false,
+      //头部信息
       productName:'物料名称XXXXXXX',//商品名称
       billMonth:'2020-03',//账单月份
       totalQuantity:10000,//总数量
       totalMoney:10000,//总金额
       currency: "CNY", //币种
-      productList:[],//产品列表集合
-    };
+    }
   },
   //监听属性 类似于data概念
   computed: {},
@@ -74,14 +84,45 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    getAccountProductInfoData(){
-      
+    onLoad(){
+      this.axios
+        .get("/api/supplier/state/getStateOrderDetailInfoList", {
+          headers: {
+            'token': '1',
+          },
+          params: {
+            stateOrderId:this.orderId,//对账单号 		
+            matterId:this.productId,//	物料编号	
+            yearMonth:this.billMonth,
+          }
+        })
+        .then(res => {
+          console.log(res);
+          // 加载状态结束
+          this.loading = false;
+          if(res.data.data==null){
+            this.finished = true;//列表停止加载
+            Toast.fail(res.data.msg);
+          }else{
+            this.productName = res.data.data.matterName;
+            this.billMonth = res.data.data.stateDate;
+            this.totalQuantity = res.data.data.sumMatterNum;
+            this.totalMoney = res.data.data.sumAmount;
+            this.currency = res.data.data.currency;
+            this.productList = res.data.data.detailInfoList;
+
+            if(res.data.data.total>=this.productList.length){
+              this.finished = true;//数据加载完毕
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {
-    this.getAccountProductInfoData();
-  },
+  created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前

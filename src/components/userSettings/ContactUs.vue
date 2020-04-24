@@ -52,14 +52,14 @@ export default {
       this.axios
         .get("/api/supplier/home/getHomeHelperInfo", {
           headers: {
-            token: "tokenValue"
+            'token': "1"
           }
           // params: {
           //   operatorId: '操作人ID'
           // }
         })
-        .then(response => {
-          console.log(response);
+        .then(res=> {
+          console.log(res);
         })
         .catch(error => {
           console.log(error);
