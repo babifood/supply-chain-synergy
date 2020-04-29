@@ -115,9 +115,7 @@ export default {
           }
       }).then(res => {
         console.log(res);
-        if(res.data.data == null){
-          Toast.fail(res.data.msg);
-        }else{
+        if(res.data.code == '200'){
           this.compName = res.data.data.supplierName; //对账单位
           this.billMonth = res.data.data.stateDate; //账单月份
           this.billCode = res.data.data.stateOrderId; //账单单号
@@ -127,6 +125,8 @@ export default {
           this.actualMoney = res.data.data.actualSum;//实际货款
           //更具后台返回的文件数组来组织对应的文件数组
           this.fileConvertTypeListFile(res.data.data.fileInfoMap.str)
+        }else{
+          Toast.fail(res.data.msg);
         }  
       }).catch(error => {
         console.log(error);

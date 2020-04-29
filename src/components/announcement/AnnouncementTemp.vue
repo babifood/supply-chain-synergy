@@ -13,25 +13,30 @@
       </div>
     </van-sticky>
     <!-- 公告内容列表 -->
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+    <van-list v-model="loading" 
+      :finished="finished" 
+      finished-text="没有更多了" 
+      :error.sync="error"
+      error-text="请求失败，点击重新加载"
+      @load="onLoad">
       <router-link
         class="list_item"
         v-for="item in announcementList"
-        :key="item.announcementId"
+        :key="item.messageId"
         tag="div"
-        :to="'/Announcement/AnnouncementInfo/'+item.announcementId"
+        :to="'/Announcement/AnnouncementInfo/'+item.messageId"
       >
         <van-row type="flex" justify="center">
           <van-col span="2">
-            <van-tag round type="danger" v-show="item.announcementStatus">新</van-tag>
+            <van-tag round type="danger" v-show="item.status">新</van-tag>
           </van-col>
-          <van-col span="5">{{item.announcementDate}}</van-col>
+          <van-col span="5">{{item.publishDate}}</van-col>
           <van-col span="15">
             <van-notice-bar
               :scrollable="false"
               color="#000000"
               background="#fff"
-            >{{item.announcementTitle}}</van-notice-bar>
+            >{{item.messageTitle}}</van-notice-bar>
           </van-col>
           <van-col span="2">
             <div>
@@ -42,18 +47,6 @@
         <div class="van-hairline--bottom"></div>
       </router-link>
     </van-list>
-    <!-- 选中公告详情 -->
-    <!-- <div class="announcement_text">
-      <van-cell-group>
-        <van-field
-          v-model="announcementText"
-          autosize
-          type="textarea"
-          maxlength="200"
-          show-word-limit
-        />
-      </van-cell-group>
-    </div>-->
   </div>
 </template>
 
@@ -69,6 +62,7 @@ export default {
     return {
       list: [],
       loading: false,
+      error: false,
       finished: false,
 
       announcementList: [],
@@ -83,19 +77,6 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    // getAnnouncementData() {
-    //   for (let i = 0; i < 10; i++) {
-    //     let listItem = {
-    //       announcementId: i,
-    //       announcementDate: "2020.02.26",
-    //       announcementTitle: "中饮巴比食品股份公司公告" + this.active,
-    //       announcementText: "2020.02.26",
-    //       announcementFile: "",
-    //       announcementStatus: true
-    //     };
-    //     this.announcementList.push(listItem);
-    //   }
-    // }
     onLoad(){
       this.axios.get("/api/supplier/message/getMessageNotifyInfoList", {
           headers: {
@@ -109,11 +90,15 @@ export default {
         console.log(res);
           // 加载状态结束
         this.loading = false;
-          // this.list = response.data.data.list;
-        // this.list=[{orderDate:'2020-04-22',orderNo:'20200422',expireTime:'2020-04-22'}];
-        // if(response.data.data.total>=this.list.length){
-          this.finished = true;
-        // }  
+        if(res.data.code == '200'){
+          this.list = res.data.data.list;
+          if(res.data.data.total>=this.list.length){
+            this.finished = true;
+          }  
+        }else{
+          this.error = true;
+        }
+          
       }).catch(error => {
         console.log(error);
       });

@@ -102,8 +102,13 @@ export default {
             certificateId:this.aptitudeId
           }
       }).then(res => {
-        console.log(res);
-          
+        if(res.data.code == '200'){
+          this.aptitudeName = res.data.exNumberLx;
+          this.begDate = res.data.exNumberFrom;
+          this.endDate = res.data.exNumberTo;
+        }else{
+          Toast.fail(res.data.message);
+        }  
       }).catch(error => {
         console.log(error);
       });
@@ -124,11 +129,11 @@ export default {
       if(this.newEndDate == ''&& this.newBegDate == ''){
           Toast.fail('日期不能为空');
       }else{
-        this.axios.post('/api/supplier/provider/updateProviderCertificateInfo',
+        this.axios.post('/api/supplier/provider/updateProviderCertificateInfo ',
           {
             'certificateId': this.aptitudeId,
             'endDate': this.newEndDate,
-            'imageUrl': '1',//参数格式不匹配
+            'imageUrl': this.fileList,//参数格式不匹配
             'startDate': this.newBegDate
           },{
             headers: {
@@ -136,11 +141,10 @@ export default {
               operatorId : '1'
             }
           }
-        ).then(function (res) {
-          console.log(res);
-          Toast.success('资质提交成功');
+        ).then(res =>{
+          Toast.fail(res.data.message);
         })
-        .catch(function (error) {
+        .catch(error => {
           console.log(error);
           Toast.fail('资质提交失败');
         });

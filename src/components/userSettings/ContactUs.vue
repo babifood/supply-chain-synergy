@@ -59,7 +59,17 @@ export default {
           // }
         })
         .then(res=> {
-          console.log(res);
+           if(res.data.code == '200'){
+             this.operatorOnDuty = res.data.data.dutyInfoList[0].name;  //值班人员信息
+             this.phone = res.data.data.dutyInfoList[0].handset; //值班人员联系方式
+             this.complaintDH = res.data.data.complainInfoList[0].phone; //投诉电话
+             this.complaintSJ = res.data.data.complainInfoList[0].handset; //投诉手机
+             this.complaintWX = res.data.data.complainInfoList[0].webchat; //投诉微信
+             this.supervisionEmail = res.data.data.feedbackInfoLit[0].controlMail; //监督邮箱
+             this.informEmail = res.data.data.feedbackInfoLit[0].reportMail; //举报邮箱
+           }else{
+             Toast.fail(res.data.message);
+           }
         })
         .catch(error => {
           console.log(error);

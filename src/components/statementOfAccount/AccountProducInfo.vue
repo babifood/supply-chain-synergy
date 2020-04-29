@@ -37,7 +37,12 @@
       </div>
       <div class="van-hairline--bottom"></div>
     </van-sticky>
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+    <van-list v-model="loading" 
+      :finished="finished" 
+      finished-text="没有更多了"
+      :error.sync="error"
+      error-text="请求失败，点击重新加载"
+      @load="onLoad">
       <div class="list_item" v-for="(item,index) in productList" :key="index">
         <van-row type="flex" justify="center" align="center">
           <van-col span="5">{{item.deliveryDate}}</van-col>
@@ -69,6 +74,7 @@ export default {
       //数据列表
       productList: [],//产品列表集合
       loading: false,
+      error: false,
       finished: false,
       //头部信息
       productName:'物料名称XXXXXXX',//商品名称
@@ -100,20 +106,18 @@ export default {
           console.log(res);
           // 加载状态结束
           this.loading = false;
-          if(res.data.data==null){
-            this.finished = true;//列表停止加载
-            Toast.fail(res.data.msg);
-          }else{
+          if(res.data.code == '200'){
             this.productName = res.data.data.matterName;
             this.billMonth = res.data.data.stateDate;
             this.totalQuantity = res.data.data.sumMatterNum;
             this.totalMoney = res.data.data.sumAmount;
             this.currency = res.data.data.currency;
             this.productList = res.data.data.detailInfoList;
-
             if(res.data.data.total>=this.productList.length){
               this.finished = true;//数据加载完毕
             }
+          }else{
+            this.error = true;
           }
         })
         .catch(error => {

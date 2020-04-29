@@ -150,35 +150,12 @@ export default {
             deliveryIds:qs.stringify(this.deliveryIds)
           }
         })
-        .then(response => {
-          console.log(response);
-          var array = [
-            {
-              deliveryId: "bfb5c5f631fc43cc85b6ca669b5f933a", 
-              address: "地址", 
-              matterUtil: "筐", 
-              detailId: "2268760760bf4651850a588ff7f2cb91", 
-              id: 6, 
-              matterNum: 0, 
-              matterDesc: "描述", 
-              finishNum: 0, 
-              matterName: "手机下单测试物料"
-            },
-            {
-              deliveryId: "bfb5c5f631fc43cc85b6ca669b5f932b", 
-              address: "地址AAAAAA", 
-              matterUtil: "箱", 
-              detailId: "2268760760bf4651850a588ff7f2cb92", 
-              id: 8, 
-              matterNum: 0, 
-              matterDesc: "描述", 
-              finishNum: 0, 
-              matterName: "测试物料名称"
-            }
-          ]
-          this.shipmentList = this.objectBindingValue(array);
-          console.log(this.shipmentList);
-          
+        .then(res => {
+          if(res.data.code == '200'){
+            this.shipmentList = this.objectBindingValue(res.data.data);
+          }else{
+            Toast.fail(res.data.message);
+          }
         })
         .catch(error => {
           console.log(error);
@@ -239,7 +216,6 @@ export default {
       //发货提交
       let en = this.shipmentList.find(item => item.productId===productId); 
       var dataArr = new Array()
-      var files = en.fileList;//附件列表
       let item = {
         deliveryId:en.orderCode,//发货单id 		
         detailId:en.productId,//发货详细id	
@@ -247,7 +223,8 @@ export default {
         matterNum:en.thisProductNub,//物料数量 	
         matterUtil:en.unit,//物料单位 	 		
         shippingMethod:en.distribution,//配送类型 
-        description:en.productDESC	//描述
+        description:en.productDESC,	//描述
+        fileList:en.fileList
       }
       dataArr.push(item);
       this.axios.post('/api/supplier/delivery/updateDeliveryOrderDetail',dataArr
@@ -257,10 +234,12 @@ export default {
             operatorId:"1"
           }
         }
-      ).then(response => {
-        console.log(response);
-        en.btnStatus = 1;//点击成功后按钮设置禁用
-        Toast.success('发货提交成功');
+      ).then(res => {
+        console.log(res);
+        if(res.data.code == "200"){
+          en.btnStatus = 1;//点击成功后按钮设置禁用
+          Toast.success('发货提交成功');
+        }
       })
       .catch(error => {
         console.log(error);
@@ -272,7 +251,7 @@ export default {
   created() {
     //获取路由参数(勾选的订单ID号数组)
     //获取路由参数(勾选的订单ID号数组)
-    this.deliveryIds = this.$route.query.orders;
+    this.deliveryIds = this.$route.params.orders;
     this.loadOrdeProduct();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

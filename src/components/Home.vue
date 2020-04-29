@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { Toast } from "vant";
 export default {
   name: "Home",
   data() {
@@ -63,17 +64,20 @@ export default {
         // params: {
         //   operatorId: '操作人ID'
         // }
-      }).then(response =>{
-        console.log(response);
-        this.orderInfo=response.data.data.matterOrderNum;//订单确认
-        this.deliveryReleaseInfo=response.data.data.deliveryOrderNum;//发货通知
-        // this.arrivalNoticeInfo=this.response.data.data.deliveryOrderNum;//到货通知(后台接口没有)
-        this.accountMainInfo=response.data.data.stateOrderNum;//账单确认
-        this.aptitudeInfo=response.data.data.providerNum;//资质信息
-        this.announcementInfo=response.data.data.messageNum;//巴比公告
-        this.msgs = response.data.data.messageList;
+      }).then(res =>{
+        if(res.data.code=="200"){
+          this.orderInfo=res.data.data.matterOrderNum;//订单确认
+          this.deliveryReleaseInfo=res.data.data.deliveryOrderNum;//发货通知
+          this.arrivalNoticeInfo=this.res.data.data.arrivalNum;//到货通知(后台接口没有)
+          this.accountMainInfo=res.data.data.stateOrderNum;//账单确认
+          this.aptitudeInfo=res.data.data.providerNum;//资质信息
+          this.announcementInfo=res.data.data.messageNum;//巴比公告
+          this.msgs = res.data.data.messageList;
+        }else{
+          Toast.fail(res.data.message);
+        }
       }).catch(error =>{
-        console.log(error);
+        Toast.fail("请求数据异常!");
       });
     }
   },

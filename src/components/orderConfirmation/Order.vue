@@ -12,7 +12,12 @@
         </van-row>
       </div>
     </van-sticky>
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+    <van-list 
+      v-model="loading" 
+      :finished="finished" finished-text="没有更多了" 
+      :error.sync="error"
+      error-text="请求失败，点击重新加载"
+      @load="onLoad">
       <router-link
         :to="'/Order/OrderInfo/'+item.orderNo"
         class="list_item"
@@ -45,6 +50,7 @@ export default {
     //这里存放数据
     return {
       list: [],
+      error: false,
       loading: false,
       finished: false,
     };
@@ -68,14 +74,17 @@ export default {
           //   page:10
           // }
         })
-        .then(response => {
-          console.log(response);
-          // 加载状态结束
+        .then(res => {
+          console.log(res);
           this.loading = false;
-          // this.list = response.data.data.list;
-          this.list=[{orderDate:'2020-04-22',orderNo:'20200422',expireTime:'2020-04-22'}];
-          if(response.data.data.total>=this.list.length){
-            this.finished = true;
+          if(res.data.code=="200"){
+            // 加载状态结束
+            this.list = res.data.data.list;
+            if(res.data.data.total>=this.list.length){
+              this.finished = true;
+            }
+          }else{
+            this.error = true;
           }
         })
         .catch(error => {

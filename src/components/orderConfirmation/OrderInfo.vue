@@ -1,74 +1,6 @@
 <!-- 订单详情页面 -->
 <template>
   <div class="OrderInfo_class">
-    <!-- <van-panel title="订单信息">
-      <div>
-        <van-row>
-          <van-col span="12">
-            <van-field type="text" :value="orderCode" label="订单号:" disabled label-width="50px" :border="true"/>
-          </van-col>
-          <van-col span="12">
-            <van-field type="number" :value="orderSum" label="总额:" disabled label-width="40px" />
-          </van-col>
-        </van-row>
-        <van-row>
-          <van-col span="12">
-            <van-field type="text" :value="buyer" label="采购员:" disabled label-width="50px" />
-          </van-col>
-          <van-col span="12">
-            <van-field type="tel" :value="mobileNub" label="电话:" disabled label-width="40px" />
-          </van-col>
-        </van-row>
-      </div>
-    </van-panel>
-    <van-panel title="产品">
-      <div>
-        <van-row>
-          <van-col span="24">
-            <van-field type="text" :value="orderCode" label="产品名:" disabled label-width="50px" />
-          </van-col>
-        </van-row>
-        <van-row>
-          <van-col span="12">
-            <van-field type="number" :value="orderCode" label="订单数:" disabled label-width="50px" />
-          </van-col>
-          <van-col span="12">
-            <van-field type="text" :value="orderSum" label="交期:" disabled label-width="40px" />
-          </van-col>
-        </van-row>
-        <van-row>
-          <van-col span="8">
-            <van-field type="number" :value="orderCode" label="单价:" disabled label-width="40px" />
-          </van-col>
-          <van-col span="8">
-            <van-field type="text" :value="orderSum" label="金额:" disabled label-width="40px" />
-          </van-col>
-          <van-col span="8">
-            <van-field type="text" :value="orderSum" label="税率:" disabled label-width="40px" />
-          </van-col>
-        </van-row>
-        <van-row>
-          <van-col span="24">
-            <van-field type="text" :value="orderCode" label="交货地址:" disabled label-width="60px" />
-          </van-col>
-        </van-row>
-        <van-row>
-          <van-col span="24">
-            <van-field type="textarea" :value="orderCode" label="订单备注:" disabled label-width="60px"/>
-          </van-col>
-        </van-row>
-      </div>
-    </van-panel>-->
-    <!-- <van-panel title="订单信息">
-      <div>
-        <van-cell-group>
-          <van-field label="订单号:" :value="orderCode" disabled />
-          <van-field label="采购员:" :value="buyer" disabled />
-          <van-field label="总额:" :value="orderSum" disabled />
-          <van-field label="电话:" :value="mobileNub" disabled />
-        </van-cell-group>
-      </div>
-    </van-panel>-->
     <van-sticky :offset-top="46">
       <van-panel title="订单信息">
         <div>
@@ -110,17 +42,17 @@
         </div>
       </van-panel>
     </van-sticky>
-    <van-panel :title="'产品'+(index+1)" v-for="(item,index) in productList" :key="item.productId">
+    <van-panel :title="'产品'+(index+1)" v-for="(item,index) in productList" :key="index">
       <div>
         <van-cell-group>
-          <van-field label="产品名:" :value="item.productName" disabled />
-          <van-field label="订单数:" :value="item.productNum" disabled />
-          <van-field label="交期:" :value="item.requireDate" disabled />
-          <van-field label="单价:" :value="item.productPrice" disabled />
-          <van-field label="金额:" :value="item.productSum" disabled />
+          <van-field label="产品名:" :value="item.matterName" disabled />
+          <van-field label="订单数:" :value="item.matterNum+item.matterUtil" disabled />
+          <van-field label="交期:" :value="item.expireTime" disabled />
+          <van-field label="单价:" :value="item.matterPrice" disabled />
+          <van-field label="金额:" :value="item.amount" disabled />
           <van-field label="税率:" :value="item.taxRate" disabled />
           <van-field label="交货地址:" :value="item.address" disabled />
-          <van-field type="textarea" label="订单备注:" :value="item.dect" disabled />
+          <van-field type="textarea" label="订单备注:" :value="item.description" disabled />
         </van-cell-group>
       </div>
     </van-panel>
@@ -153,34 +85,11 @@ export default {
     //这里存放数据
     return {
       orderNo: "",
-      orderSum: "5000000",
-      buyer: "张三",
-      mobileNub: "15666668888",
-      orderContract:'GT-00001-1000-XXXX',
-      productList: [
-        {
-          productId: 1,
-          productName: "阳政线馒头切刀轴YJ-1510L(切刀座+切刀杆)",
-          productNum: "3000",
-          requireDate: "2020.02.22/16:00",
-          productPrice: "3000",
-          productSum: "9000000",
-          taxRate: "10%",
-          address: "上海市松江区茸江路789号",
-          dect: "备注上海市松江区茸江路789号"
-        },
-        {
-          productId: 2,
-          productName: "阳政线馒头切刀轴YJ-1510L(切刀座+切刀杆)",
-          productNum: "3000",
-          requireDate: "2020.02.22/16:00",
-          productPrice: "3000",
-          productSum: "9000000",
-          taxRate: "10%",
-          address: "上海市松江区茸江路789号",
-          dect: "备注上海市松江区茸江路789号"
-        }
-      ],
+      orderSum: "",
+      buyer: "",
+      mobileNub: "",
+      orderContract:'',
+      productList:[],
       affirmDESC: ""
     };
   },
@@ -201,9 +110,16 @@ export default {
             orderNo: this.orderNo
           }
         })
-        .then(response => {
-          console.log(response);
-          
+        .then(res => {
+          console.log(res);
+          if(res.data.code=='200'){
+            this.orderNo = res.data.data.orderNo;
+            this.orderSum = res.data.data.totalAmount;
+            this.buyer = res.data.data.purchaser;
+            this.mobileNub = res.data.data.mobile;
+            this.orderContract = res.data.data.contractNo;
+            this.productList = res.data.data.detailInfoVos;
+          }
         })
         .catch(error => {
           console.log(error);
@@ -221,12 +137,11 @@ export default {
             operatorId : '1'
           }
         }
-      ).then(function (response) {
-        console.log(response);
-        Toast.success('订单确定成功');
+      ).then(res =>{
+        Toast.success(res.data.message);
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch(error => {
+        // console.log(error);
         Toast.fail('订单确定失败');
       });
     }

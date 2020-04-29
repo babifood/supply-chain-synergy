@@ -14,16 +14,16 @@
     </van-sticky>
 
     <router-link
-      :to="'/Aptitude/AptitudeInfo/'+item.aptitudeId"
+      :to="'/Aptitude/AptitudeInfo/'+item.exNumberId"
       class="list_item"
       v-for="item in aptitudeList"
-      :key="item.aptitudeId"
+      :key="item.exNumberId"
       tag="div"
     >
       <van-row type="flex" justify="center">
-        <van-col span="8">{{item.aptitudeName}}</van-col>
-        <van-col span="7">{{item.aptitudeEndDate}}</van-col>
-        <van-col span="5">{{item.adjunct}}</van-col>
+        <van-col span="8">{{item.exNumberLx}}</van-col>
+        <van-col span="7">{{item.exNumberTo}}</van-col>
+        <van-col span="5">{{item.status}}</van-col>
         <van-col span="1">
           <van-icon name="arrow" />
         </van-col>
@@ -36,7 +36,7 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import { Toast } from "vant";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -53,17 +53,7 @@ export default {
   //方法集合
   methods: {
     getAptitudeData() {
-      for (let i = 0; i < 1; i++) {
-        let listItem = {
-          aptitudeId: i,
-          aptitudeName: "证件名称" + i,
-          aptitudeBegDate: "2020-03-03",
-          aptitudeEndDate: "2020-03-03",
-          adjunct: "有"
-        };
-        this.aptitudeList.push(listItem);
-      }
-      this.axios.get("/api/supplier/provider/getProviderCertificateInfo", {
+      this.axios.get("/api/supplier/provider/getProviderCertificateList", {
           headers: {
             'token': "1",
             'supplierCode': "1"
@@ -72,6 +62,11 @@ export default {
           // }
       }).then(res => {
         console.log(res);
+        if(res.data.code == '200'){
+          this.aptitudeList = res.data.data;
+        }else{
+          Toast.fail(res.data.message);
+        }
           
       }).catch(error => {
         console.log(error);

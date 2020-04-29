@@ -100,19 +100,6 @@ export default {
       this.showEndCalendar = false;
     },
     searchArrivalNotice() {
-      // for (let i = 0; i < 30; i++) {
-      //     let arrivalNoticeItem = {
-      //       arrivalNoticeId: i,
-      //       deliveryDate:'2020.02.26',
-      //       orderCode: "4500000000"+i,
-      //       productName: "阳政线馒头切刀轴YJ-1510L(切刀座+切刀杆)",//产品名称
-      //       supplier:'上海*****有限公司',
-      //       deliveryNum: 3000,
-      //       deliveryMode :"集装箱卡车",//运送方式
-      //       deliverGoodsDect :"发货说明发货说明发货说明发货说明发货说明发货说明发货说明" //发货说明
-      //     };
-      //     this.arrivalNoticeList.push(arrivalNoticeItem);
-      // } 
       this.axios
         .get("/api/supplier/arrival/getArrivalOrderInfoList", {
           headers: {
@@ -125,23 +112,12 @@ export default {
             endDate:this.endDateVal //结束日期	yyyy-MM-dd 	
           }
         })
-        .then(response => {
-          // console.log(response);
-          var array = [
-            {
-              supplierName: "1", 
-              matterUtil: "matterUtil", 
-              arrivalOrderId: 1, 
-              shippingMethod: "shippingMethod", 
-              description: "", 
-              matterNum: 0, 
-              matterDesc: null, 
-              arrivalDate: null, 
-              matterName: "matterName"
-            }
-          ]
-          this.arrivalNoticeList = array
-          console.log(this.arrivalNoticeList);
+        .then(res => {
+          if(res.data.code == '200'){
+            this.arrivalNoticeList = res.data.list
+          }else{
+            Toast.fail(res.data.message);
+          }
         })
         .catch(error => {
           console.log(error);

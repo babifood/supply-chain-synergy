@@ -38,7 +38,7 @@
             <van-field :value="actualMoney" label="实际货款金额:" disabled />
           </van-col>
           <van-col span="6">
-            <van-button round type="primary" size="small" @click="accountAffirm">账单确认</van-button>
+            <van-button round type="primary" size="small" :disabled="btnStatus === 1" @click="accountAffirm">账单确认</van-button>
           </van-col>
           <van-col span="6">
             <van-button round type="primary" size="small" @click="accountDownload">账单下载</van-button>
@@ -81,7 +81,7 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import { Toast } from "vant";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -104,7 +104,8 @@ export default {
       currency: "CNY", //币种
       monthlyDeductions: 34, //月度扣款总额
       actualMoney: 11659172, //实际货款
-      accountProductList: [] //对账单物料集合
+      accountProductList: [], //对账单物料集合
+      btnStatus:0,//按钮状态
     };
   },
   //监听属性 类似于data概念
@@ -114,20 +115,34 @@ export default {
   //方法集合
   methods: {
     //账单确认
-    accountAffirm() {},
+    accountAffirm() {
+      this.axios.post('/api/supplier/state/updateStatInfo'
+        ,{
+          'orderStateId':this.orderId
+        }
+        ,{
+          headers: {
+            token: "1",
+            operatorId:"1"
+          }
+        }
+      ).then(res =>{
+        if(res.data.code == "200"){
+          this.btnStatus = 1;
+          Toast.success('对账单提交成功');
+        }else{
+          Toast.fail(res.data.message);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        Toast.fail('对账单提交失败');
+      });
+    },
     //账单下载
     accountDownload() {},
     //获取对账明细信息
     getAccountInfoData() {
-      // for (let i = 0; i < 26; i++) {
-      //   let listItem = {
-      //     productId: i,
-      //     productName: "物料名称XXXXXXXX" + i,
-      //     productNum: 100 + i,
-      //     productSum: 1000 + 1
-      //   };
-      //   this.accountProductList.push(listItem);
-      // }
       this.axios
         .get('/api/supplier/state/getStateOrderDetailList', {
           headers: {
@@ -139,15 +154,18 @@ export default {
           }
         })
         .then(rep => {
-          console.log(rep);
-          this.compName = rep.data.data.supplierName;
-          this.billMonth = rep.data.data.stateDate;
-          this.billCode = rep.data.data.stateOrderId;
-          this.totalAmountPayable = rep.data.data.sumPayable;
-          this.currency = rep.data.data.currency;
-          this.monthlyDeductions = rep.data.data.monthWithhold;
-          this.actualMoney = rep.data.data.actualSum;
-          this.accountProductList = rep.data.data.matterList;
+          if(rep.data.code == '200'){
+            this.compName = rep.data.data.supplierName;
+            this.billMonth = rep.data.data.stateDate;
+            this.billCode = rep.data.data.stateOrderId;
+            this.totalAmountPayable = rep.data.data.sumPayable;
+            this.currency = rep.data.data.currency;
+            this.monthlyDeductions = rep.data.data.monthWithhold;
+            this.actualMoney = rep.data.data.actualSum;
+            this.accountProductList = rep.data.data.matterList;
+          }else{
+            Toast.fail(res.data.message);
+          }
         })
         .catch(error => {
           console.log(error);

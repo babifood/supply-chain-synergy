@@ -10,7 +10,7 @@
       </van-row>
       <!-- 右对齐 -->
       <van-row type="flex" justify="space-between" class="row2_class">
-        <van-col span="5">{{timesOfView}}阅读</van-col>
+        <van-col span="5"></van-col>
         <van-col span="9">{{announcemenDate}}</van-col>
       </van-row>
       <van-divider :style="{ color: '#969799', borderColor: '#969799',}"/>
@@ -24,16 +24,17 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import { Toast } from "vant";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
     return {
+      announcementId :'',//资质id
       announcemenTitle: "中饮巴比食品股有限公司公告通知",
       announcemenDate: "2020-03-05 12:31:44",
-      timesOfView: 20,
+      // timesOfView: 20,
       announcemenText: "   这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）"
     };
   },
@@ -42,9 +43,34 @@ export default {
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    getAnnouncementInfo(){
+      this.axios.get("/api/supplier/message/getMessageNotifyInfo", {
+          headers: {
+            'token': '1',
+          },
+          params: {
+            messageId:this.announcementId
+          }
+      }).then(res => {
+        console.log(res);
+        if(res.data.code == '200'){
+          this.announcemenTitle = res.data.messageTitle;
+          this.announcemenDate = res.data.publishDate;
+          this.announcemenText = res.data.messageContent;
+        }else{
+          Toast.fail(res.data.message);
+        }   
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.announcementId = this.$route.params.announcementId;
+    this.getAnnouncementInfo();
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前

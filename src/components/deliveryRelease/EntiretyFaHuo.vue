@@ -156,34 +156,12 @@ export default {
             deliveryIds:qs.stringify(this.deliveryIds)
           }
         })
-        .then(response => {
-          // console.log(response);
-          var array = [
-            {
-              deliveryId: "bfb5c5f631fc43cc85b6ca669b5f933a", 
-              address: "地址", 
-              matterUtil: "筐", 
-              detailId: "2268760760bf4651850a588ff7f2cb91", 
-              id: 6, 
-              matterNum: 0, 
-              matterDesc: "描述", 
-              finishNum: 0, 
-              matterName: "手机下单测试物料"
-            },
-            {
-              deliveryId: "bfb5c5f631fc43cc85b6ca669b5f932b", 
-              address: "地址AAAAAA", 
-              matterUtil: "箱", 
-              detailId: "2268760760bf4651850a588ff7f2cb92", 
-              id: 8, 
-              matterNum: 0, 
-              matterDesc: "描述", 
-              finishNum: 0, 
-              matterName: "测试物料名称"
-            }
-          ]
-          this.entiretyList = this.objectBindingValue(array);
-          console.log(this.entiretyList);
+        .then(res => {
+          if(res.data.code == "200"){
+            this.entiretyList = this.objectBindingValue(res.data.data);
+          }else{
+            Toast.fail(res.data.message);
+          }
         })
         .catch(error => {
           console.log(error);
@@ -202,7 +180,7 @@ export default {
           thisProductNub:'',//本次发货数量
           unit:obj.matterUtil,//单位
           checked:false,//是否发全
-          fileList:[],//附件列表
+          fileList:obj.orderFiles,//附件列表
           predictAOG_date:'',//预计到货时间
           distribution:'',//配送方式
           productDESC:''//备注说明
@@ -234,7 +212,6 @@ export default {
       let distributionValue = this.distributionValue;
       let shipmentDect = this.shipmentDect;
       var dataArr = new Array()
-      var files = new Array()
       this.entiretyList.forEach(function (obj){
         let item = {
           deliveryId:obj.orderCode,//发货单id 		
@@ -243,10 +220,10 @@ export default {
           matterNum:obj.thisProductNub,//物料数量 	
           matterUtil:obj.unit,//物料单位 	 		
           shippingMethod:distributionValue,//配送类型 
-          description:shipmentDect	//描述
+          description:shipmentDect,	//描述
+          fileList:obj.fileList //附件
         }
         dataArr.push(item);
-        files.push(obj.fileList);
       })
       console.log(dataArr);
       this.axios.post('/api/supplier/delivery/updateDeliveryOrderDetail',dataArr
@@ -256,9 +233,11 @@ export default {
             operatorId:"1"
           }
         }
-      ).then(response =>{
-        this.btnStatus = 1;
-        Toast.success('发货提交成功');
+      ).then(res =>{
+        if(res.data.code == "200"){
+          this.btnStatus = 1;
+          Toast.success('发货提交成功');
+        }
       })
       .catch(error => {
         console.log(error);
@@ -269,6 +248,8 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     //获取路由参数(勾选的订单ID号数组)
+    console.log(this.$route.query.orders);
+    
     this.deliveryIds = this.$route.query.orders;    
     this.loadOrdeProduct();
   },

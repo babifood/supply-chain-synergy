@@ -13,7 +13,12 @@
             </van-row>
           </div>
         </van-sticky>
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+        <van-list v-model="loading" 
+          :finished="finished" 
+          finished-text="没有更多了"
+          :error.sync="error"
+          error-text="请求失败，点击重新加载"
+          @load="onLoad">
           <div class="list_item" v-for="item in list" :key="item.deliveryId" tag="div">
             <van-row type="flex" justify="center">
               <van-col span="2" class="checkbox_col">
@@ -106,6 +111,7 @@ export default {
     //这里存放数据
     return {
       list: [],
+      error: false,
       loading: false,
       finished: false,
     
@@ -124,59 +130,28 @@ export default {
   //方法集合
   methods: {
     onLoad() {
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      // setTimeout(() => {
-      //   for (let i = 0; i < 30; i++) {
-      //     let listItem = {
-      //       orderId: i,
-      //       orderStatus: false,
-      //       orderCode: "450000000" + i,
-      //       requireDate: "2020.02.26/13:55",
-      //       dropShipping: 2, //代发物料
-      //     };
-      //     this.list.push(listItem);
-      //   }
-
-      //   // 加载状态结束
-      //   this.loading = false;
-
-      //   // 数据全部加载完成
-      //   if (this.list.length >= 30) {
-      //     this.finished = true;
-      //   }
-      // }, 1000);
       this.axios
         .get("/api/supplier/delivery/getDeliveryOrderList", {
           headers: {
             'token': '1',
+            'operatorId':'1'
           },
-          params: {
-            limit: this.limit,
-            page:10
-          }
+          // params: {
+          //   limit: this.limit,
+          //   page:10
+          // }
         })
-        .then(response => {
-          console.log(response);
+        .then(res => {
           // 加载状态结束
           this.loading = false;
-          // this.list = response.data.data.list;
-          this.list=[
-            {
-              deliveryId: "1", 
-              expireTime: "1900-01-01 00:00", 
-              id: 1, 
-              matterNum: 0
-            },{
-              deliveryId: "2", 
-              expireTime: "1900-01-01 00:00", 
-              id: 2, 
-              matterNum: 0
+          if(res.data.code=="200"){
+            this.list = res.data.data.list;
+            if(res.data.data.total>=this.list.length){
+              this.finished = true;
             }
-          ];
-          // if(response.data.data.total>=this.list.length){
-            this.finished = true;
-          // }
+          }else{
+            this.error = true;
+          }
         })
         .catch(error => {
           console.log(error);
@@ -199,7 +174,7 @@ export default {
           this.orderIdList.push(element.deliveryId);
         }
       });
-      this.$router.push({path:'/DeliveryRelease/SeparateFaHuo/',params: this.orderIdList});
+      this.$router.push({path:'/DeliveryRelease/SeparateFaHuo/',query:{orders:this.orderIdList}});
     },
     formatDate(date) {
       return moment(date).format("YYYY-MM-DD");
@@ -214,20 +189,28 @@ export default {
       this.showEndCalendar = false;
     },
     searchHistory() {
-      //Toast("开始时间" + this.begDateVal + "结束时间" + this.endDateVal);
-      for (let i = 0; i < 30; i++) {
-          let historyItem = {
-            deliverGoodsId: i,
-            orderCode:'450000000'+i,
-            deliverGoodsDate: "2020.02.26",//发货日期
-            deliverGoodsNum: 3000,//发货数量
-            productName: "阳政线馒头切刀轴YJ-1510L(切刀座+切刀杆)",//产品名称
-            predictDate: "2020.02.26/13:55", //预计到货时间
-            transportMode :"集装箱卡车",//运送方式
-            deliverGoodsDect :"发货说明发货说明发货说明发货说明发货说明发货说明发货说明" //发货说明
-          };
-          this.historyList.push(historyItem);
-      } 
+      
+       this.axios
+        .get("/api/supplier/delivery/getDeliveryOrderHistoryList", {
+          headers: {
+            'token': '1',
+            'operatorId':'1'
+          },
+          params: {
+            startDate:this.begDateVal,
+            endDate:this.endDateVal
+          }
+        })
+        .then(res => {
+          if(res.data.code == '200'){
+            this.historyList = res.data.data.list;
+          }else{
+            Toast.fail(res.data.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）

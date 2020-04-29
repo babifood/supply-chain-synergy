@@ -40,7 +40,11 @@
       </div>
     </van-sticky>
     <!-- 账单内容列表 -->
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> 
+    <van-list v-model="loading" 
+      :finished="finished" 
+      finished-text="没有更多了" 
+      :error.sync="error"
+      error-text="请求失败，点击重新加载" @load="onLoad"> 
       <router-link
         class="list_item"
         v-for="item in list "
@@ -83,6 +87,7 @@ export default {
 
       list: [],
       loading: false,
+      error: false,
       finished: false,
     };
   },
@@ -108,37 +113,24 @@ export default {
           },
           params: {
             year:this.accountYear,
-            limit: this.limit,
-            page:10
           }
         })
-        .then(response => {
-          console.log(response);
+        .then(res => {
+          console.log(res);
           // 加载状态结束
           this.loading = false;
-          
-          if(this.accountActive===0){
-            var responseList=[{//模拟数据
-              stateStatus: 0, 
-              stateDateStr: null, 
-              stateOrderId: '202003260001', 
-              stateDate: "202003"
-            }]
-            this.list = this.billBindingValue(responseList)
-          }else if(this.accountActive===1){
-            var responseList=[{//模拟数据
-              fileStatus: 0, 
-              stateOrderId: '202003260001', 
-              stateDate: '202003'
-            }]
-            this.list = this.fileBindingValue(responseList)
+          if(res.data.code == '200'){
+            if(this.accountActive===0){
+              this.list = this.billBindingValue(res.data.data.list)
+            }else if(this.accountActive===1){
+              this.list = this.fileBindingValue(res.data.data.list)
+            }
+            if(res.data.data.total>=this.list.length){
+              this.finished = true;
+            }
+          }else{
+            this.error = true;
           }
-          
-          // this.list = response.data.data.list;
-          // this.list=[{orderDate:'2020-04-22',orderNo:'20200422',expireTime:'2020-04-22'}];
-          // if(response.data.data.total>=this.list.length){
-          this.finished = true;
-          // }
         })
         .catch(error => {
           console.log(error);
