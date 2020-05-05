@@ -182,10 +182,10 @@ export default {
     this.accountYear =this.formatDate(new Date())
     if(this.accountActive===0){
       this.routerPath='/AccountMain/AccountInfo/';
-      this.url = '/api/supplier/state/getStateOrderInfoList'
+      this.url = '/supplier/state/getStateOrderInfoList'
     }else if(this.accountActive===1){
       this.routerPath='/AccountMain/AccountUploader/';
-      this.url = '/api/supplier/state/getStateOrderFileList'
+      this.url = '/supplier/state/getStateOrderFileList'
     }
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

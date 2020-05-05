@@ -88,7 +88,7 @@ export default {
     },
     getPersonageInfo(){
       this.axios
-        .get("/api/supplier/home/getUserInfo", {
+        .get("/supplier/home/getUserInfo", {
           headers: {
             'token': '1',
             'operatorId':'1'

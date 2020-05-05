@@ -68,7 +68,26 @@ export default {
     validator(val){
         return /^1[3456789]\d{9}$/.test(val);
     },
-    onSubmit() {}
+    onSubmit() {
+      this.axios.post('/auth/login/loginWeChat',
+          {
+            'invitCode': this.invitationCode,
+            'mobile': this.mobile,
+            'sessionId': sessionStorage.getItem('sessionId'),
+            'userName': this.personName
+          },{
+            headers: {
+              token: '1',
+            }
+          }
+        ).then(res =>{
+          Toast.fail(res.data.message);
+        })
+        .catch(error => {
+          console.log(error);
+          Toast.fail('绑定失败');
+        });
+    }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},

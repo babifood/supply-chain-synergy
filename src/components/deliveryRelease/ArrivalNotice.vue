@@ -101,7 +101,7 @@ export default {
     },
     searchArrivalNotice() {
       this.axios
-        .get("/api/supplier/arrival/getArrivalOrderInfoList", {
+        .get("/supplier/arrival/getArrivalOrderInfoList", {
           headers: {
             'token': '1',
           },

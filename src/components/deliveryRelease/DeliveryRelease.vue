@@ -131,7 +131,7 @@ export default {
   methods: {
     onLoad() {
       this.axios
-        .get("/api/supplier/delivery/getDeliveryOrderList", {
+        .get("/supplier/delivery/getDeliveryOrderList", {
           headers: {
             'token': '1',
             'operatorId':'1'
@@ -191,7 +191,7 @@ export default {
     searchHistory() {
       
        this.axios
-        .get("/api/supplier/delivery/getDeliveryOrderHistoryList", {
+        .get("/supplier/delivery/getDeliveryOrderHistoryList", {
           headers: {
             'token': '1',
             'operatorId':'1'

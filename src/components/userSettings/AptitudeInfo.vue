@@ -94,7 +94,7 @@ export default {
   methods: {
     //获取供应商详情
     getAptitudeinfo(){
-      this.axios.get("/api/supplier/provider/getProviderCertificateInfo", {
+      this.axios.get("/supplier/provider/getProviderCertificateInfo", {
           headers: {
             'token': "1",
           },
@@ -129,7 +129,7 @@ export default {
       if(this.newEndDate == ''&& this.newBegDate == ''){
           Toast.fail('日期不能为空');
       }else{
-        this.axios.post('/api/supplier/provider/updateProviderCertificateInfo ',
+        this.axios.post('/supplier/provider/updateProviderCertificateInfo',
           {
             'certificateId': this.aptitudeId,
             'endDate': this.newEndDate,

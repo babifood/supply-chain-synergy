@@ -108,7 +108,7 @@ export default {
          }
          arr.push(item);
       })
-      this.axios.post('/api/supplier/home/updateUserInfo',
+      this.axios.post('/supplier/home/updateUserInfo',
           {
             'newUsername': this.newUserName,
             'newMobile': this.newMobile,
@@ -139,7 +139,7 @@ export default {
       //   this.accountList.push(listItem);
       // }
       this.axios
-        .get("/api/supplier/home/getUserRelation", {
+        .get("/supplier/home/getUserRelation", {
           headers: {
             'token': '1',
             'operatorId':'1'

@@ -78,7 +78,7 @@ export default {
   //方法集合
   methods: {
     onLoad(){
-      this.axios.get("/api/supplier/message/getMessageNotifyInfoList", {
+      this.axios.get("/supplier/message/getMessageNotifyInfoList", {
           headers: {
             'token': '1',
             'supplierCode':'1'

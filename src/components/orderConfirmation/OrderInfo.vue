@@ -102,7 +102,7 @@ export default {
     //加载订单下的商品明细
     loadProduct(){
       this.axios
-        .get("/api/supplier/order/getOrderDetailList", {
+        .get("/supplier/order/getOrderDetailList", {
           headers: {
             token: "tokenValue"
           },
@@ -127,7 +127,7 @@ export default {
     },
     //订单确认
     affirmOrder() {
-       this.axios.post('api/supplier/order/updateOrderInfo',
+       this.axios.post('/supplier/order/updateOrderInfo',
         {
           'confirmDesc': this.affirmDESC,
           'orderNo': this.orderNo

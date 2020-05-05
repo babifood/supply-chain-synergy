@@ -148,7 +148,7 @@ export default {
     //加载订单产品数据
     loadOrdeProduct(){
       this.axios
-        .get("/api/supplier/delivery/getDeliveryOrderList", {
+        .get("/supplier/delivery/getDeliveryOrderList", {
           headers: {
             'token': '1',
           },
@@ -226,7 +226,7 @@ export default {
         dataArr.push(item);
       })
       console.log(dataArr);
-      this.axios.post('/api/supplier/delivery/updateDeliveryOrderDetail',dataArr
+      this.axios.post('/supplier/delivery/updateDeliveryOrderDetail',dataArr
         ,{
           headers: {
             token: "1",

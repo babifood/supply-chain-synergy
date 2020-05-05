@@ -116,7 +116,7 @@ export default {
   methods: {
     //账单确认
     accountAffirm() {
-      this.axios.post('/api/supplier/state/updateStatInfo'
+      this.axios.post('/supplier/state/updateStatInfo'
         ,{
           'orderStateId':this.orderId
         }
@@ -144,7 +144,7 @@ export default {
     //获取对账明细信息
     getAccountInfoData() {
       this.axios
-        .get('/api/supplier/state/getStateOrderDetailList', {
+        .get('/supplier/state/getStateOrderDetailList', {
           headers: {
             'token': '1',
           },

@@ -55,7 +55,7 @@ export default {
   //方法集合
   methods: {
     getData(){
-      this.axios.get('/api/supplier/home/getHomePageInfo',
+      this.axios.get('/supplier/home/getHomePageInfo',
       {
         headers: {
           'token': '1',

@@ -105,7 +105,7 @@ export default {
     },
     //获取附件数据
     getAccessoryData(){
-      this.axios.get("/api/supplier/state/getStateOrderFileDetail", {
+      this.axios.get("/supplier/state/getStateOrderFileDetail", {
           headers: {
             'token': "1"
           },

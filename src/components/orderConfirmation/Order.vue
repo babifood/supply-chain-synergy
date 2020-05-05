@@ -64,7 +64,7 @@ export default {
     onLoad() {
       // 异步更新数据
       this.axios
-        .get("/api/supplier/order/getOrderInfoList", {
+        .get("/supplier/order/getOrderInfoList", {
           headers: {
             'token': '1',
             'supplierCode':'1'

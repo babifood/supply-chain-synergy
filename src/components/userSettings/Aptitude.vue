@@ -53,7 +53,7 @@ export default {
   //方法集合
   methods: {
     getAptitudeData() {
-      this.axios.get("/api/supplier/provider/getProviderCertificateList", {
+      this.axios.get("/supplier/provider/getProviderCertificateList", {
           headers: {
             'token': "1",
             'supplierCode': "1"

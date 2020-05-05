@@ -50,7 +50,7 @@ export default {
   methods: {
     loadData(){
       this.axios
-        .get("/api/supplier/home/getHomeHelperInfo", {
+        .get("/supplier/home/getHomeHelperInfo", {
           headers: {
             'token': "1"
           }

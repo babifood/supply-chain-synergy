@@ -45,7 +45,7 @@ export default {
   //方法集合
   methods: {
     getAnnouncementInfo(){
-      this.axios.get("/api/supplier/message/getMessageNotifyInfo", {
+      this.axios.get("/supplier/message/getMessageNotifyInfo", {
           headers: {
             'token': '1',
           },

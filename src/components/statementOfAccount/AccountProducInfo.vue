@@ -92,7 +92,7 @@ export default {
   methods: {
     onLoad(){
       this.axios
-        .get("/api/supplier/state/getStateOrderDetailInfoList", {
+        .get("/supplier/state/getStateOrderDetailInfoList", {
           headers: {
             'token': '1',
           },
