@@ -73,11 +73,11 @@ export default {
           {
             'invitCode': this.invitationCode,
             'mobile': this.mobile,
-            'sessionId': sessionStorage.getItem('sessionId'),
             'userName': this.personName
           },{
             headers: {
-              token: '1',
+              'token': '1',
+              'sessionId': sessionStorage.getItem('sessionId')
             }
           }
         ).then(res =>{
@@ -90,7 +90,10 @@ export default {
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    // console.log(sessionStorage.getItem('sessionId'));
+    
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
