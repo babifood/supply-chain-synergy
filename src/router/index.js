@@ -43,7 +43,7 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/Home/:token',
       name: 'Home',
       component: Home
     },
@@ -108,7 +108,7 @@ export default new Router({
       component: ContactUs
     },
     {
-      path: '/CustomerBinding',
+      path: '/CustomerBinding/:sessionId',
       name: 'CustomerBinding',
       component: CustomerBinding
     },

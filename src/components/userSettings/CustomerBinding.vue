@@ -56,7 +56,9 @@ export default {
       personName: "",
       mobile: "",
       invitationCode: "",
-      gender: "1"
+      gender: "1",
+      sessionId:'',
+      token:'测试token'
     };
   },
   //监听属性 类似于data概念
@@ -77,11 +79,14 @@ export default {
           },{
             headers: {
               'token': '1',
-              'sessionId': sessionStorage.getItem('sessionId')
+              'sessionId': this.sessionId
             }
           }
         ).then(res =>{
-          Toast.fail(res.data.message);
+          if(res.data.code == '200'){
+            this.token = res.headers.token
+            this.$router.push({ path:'/Home/'+this.token})
+          }
         })
         .catch(error => {
           console.log(error);
@@ -91,8 +96,8 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    // console.log(sessionStorage.getItem('sessionId'));
-    
+    this.sessionId = this.$route.params.sessionId;
+    console.log(this.sessionId);
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

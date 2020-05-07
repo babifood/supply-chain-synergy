@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/supplier': {
-        target:'http://10.4.1.27:8482',
+        target:'http://10.4.1.27:80',
         // secure: false, // 如果是https接口，需要配置这个参数
         changeOrigin:true,
         pathRewrite:{
@@ -20,7 +20,7 @@ module.exports = {
         }
       },
       '/auth': {
-        target:'http://10.4.1.27:8382',
+        target:'http://10.4.1.27:80',
         // secure: false, // 如果是https接口，需要配置这个参数
         changeOrigin:true,
         pathRewrite:{

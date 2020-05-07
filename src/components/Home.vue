@@ -50,6 +50,7 @@ export default {
       aptitudeInfo:0,//资质信息
       announcementInfo:0,//巴比公告
       msgs: [],
+      token:'',
     };
   },
   //方法集合
@@ -58,7 +59,7 @@ export default {
       this.axios.get('/supplier/home/getHomePageInfo',
       {
         headers: {
-          'token': '1',
+          'token': this.token,
           'operatorId': '1'
         },
         // params: {
@@ -83,6 +84,9 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    this.token = this.$route.params.token;
+    console.log("home:获取tocke："+this.token);
+    
     this.getData();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
