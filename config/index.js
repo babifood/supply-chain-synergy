@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
       '/supplier': {
         target:'http://10.4.1.27:80',
-        secure: true, // 如果是https接口，需要配置这个参数
+        // secure: false, // 如果是https接口，需要配置这个参数
         changeOrigin:true,
         pathRewrite:{
           '^/supplier': '/supplier'
@@ -21,7 +21,7 @@ module.exports = {
       },
       '/auth': {
         target:'http://10.4.1.27:80',
-        secure: true, // 如果是https接口，需要配置这个参数
+        // secure: false, // 如果是https接口，需要配置这个参数
         changeOrigin:true,
         pathRewrite:{
           '^/auth': '/auth'

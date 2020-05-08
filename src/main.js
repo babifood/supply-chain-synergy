@@ -15,6 +15,8 @@ Vue.use(Vant);//添加Vant依赖
 import { Lazyload } from 'vant';
 Vue.use(Lazyload);
 //自定义组件
+//首页
+import Home from './components/Home.vue'
 //订单主页面组件
 import Order from './components/orderConfirmation/Order.vue'
 //订单详情页面组件
@@ -63,6 +65,7 @@ new Vue({
   router,
   components: {
     App,
+    Home,
     Order,
     OrderInfo,
     DeliveryRelease,

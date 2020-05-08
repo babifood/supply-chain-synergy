@@ -22,7 +22,7 @@
       background="#fff"
     />
     <van-grid :gutter="10" class="grid">
-      <van-grid-item icon="passed" :info="orderInfo" text="订单确认" :to="'/Order/'+this.token" />
+      <van-grid-item icon="passed" :info="orderInfo" text="订单确认" to="'/Order" />
       <van-grid-item icon="bullhorn-o" :info="deliveryReleaseInfo" text="发货通知" to="/DeliveryRelease"/>
       <van-grid-item icon="logistics" :info="arrivalNoticeInfo" text="到货通知" to="/ArrivalNotice"/>
       <van-grid-item icon="records" :info="accountMainInfo" text="账单确认" to="/AccountMain"/>
@@ -87,7 +87,7 @@ export default {
   created() {
     sessionStorage.setItem("token",this.$route.params.token);
     this.token = this.$route.params.token;
-    console.log("home:获取tocke："+this.token);
+    // console.log("home:获取tocke："+this.token);
     
     this.getData();
   },

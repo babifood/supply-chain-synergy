@@ -48,7 +48,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/Order/:token',
+      path: '/Order',
       name: 'Order',
       component: Order
     },

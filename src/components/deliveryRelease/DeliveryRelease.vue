@@ -61,7 +61,7 @@
                   placeholder="选择日期"
                   @click="showBegCalendar = true"
                 />
-                <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" />
+                <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" :min-date="minDate" :max-date="maxDate"/>
               </van-col>
               <van-col span="10">
                 <van-field
@@ -74,9 +74,9 @@
                   placeholder="选择日期"
                   @click="showEndCalendar = true"
                 />
-                <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" />
+                <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" :min-date="minDate" :max-date="maxDate"/>
               </van-col>
-              <van-col span="3">
+              <van-col span="3" class="search_but">
                 <van-button round type="primary" size="mini" @click="searchHistory">查询</van-button>
               </van-col>
             </van-row>
@@ -117,6 +117,8 @@ export default {
     
       begDateVal: "",
       endDateVal: "",
+      minDate: null,
+      maxDate: null,
       showBegCalendar: false,
       showEndCalendar: false,
       historyList: [],
@@ -214,7 +216,11 @@ export default {
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    var data = new Date()
+    this.minDate = new Date(data.getFullYear(), data.getMonth()-1);
+    this.maxDate = new Date(data.getFullYear(), data.getMonth()+2);
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
@@ -266,9 +272,15 @@ export default {
     text-align: center;
   }
   .search_head {
-    height: 40px;
-    line-height: 40px;
-    background-color: #fff;
+     background-color: #fff;
+    .van-cell {
+      padding: 0px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    .search_but {
+      padding-top: 10px;
+    }
   }
   .history_list{
     padding-left: 8px;

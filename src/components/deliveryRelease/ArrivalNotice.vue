@@ -25,7 +25,7 @@
               @click="showBegCalendar = true"
               label-width="60"
             />
-            <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" />
+            <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" :min-date="minDate" :max-date="maxDate"/>
           </van-col>
           <van-col span="10">
             <van-field
@@ -38,7 +38,7 @@
               @click="showEndCalendar = true"
               label-width="60"
             />
-            <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" />
+            <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" :min-date="minDate" :max-date="maxDate"/>
           </van-col>
           <van-col span="3" class="search_but">
             <van-button round type="primary" size="mini" @click="searchArrivalNotice">查询</van-button>
@@ -76,6 +76,8 @@ export default {
       storageLocation: "", //库位
       begDateVal: "", //开始时间
       endDateVal: "", //结束时间
+      minDate: null,
+      maxDate: null,
       showBegCalendar: false,
       showEndCalendar: false,
       arrivalNoticeList: []
@@ -125,7 +127,11 @@ export default {
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    var data = new Date()
+    this.minDate = new Date(data.getFullYear(), data.getMonth()-1);
+    this.maxDate = new Date(data.getFullYear(), data.getMonth()+2);
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
