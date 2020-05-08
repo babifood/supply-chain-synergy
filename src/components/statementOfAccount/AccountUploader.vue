@@ -107,7 +107,7 @@ export default {
     getAccessoryData(){
       this.axios.get("/supplier/state/getStateOrderFileDetail", {
           headers: {
-            'token': "1"
+            'token': sessionStorage.getItem('token')
           },
           params: {
             stateOrderId: this.orderId,

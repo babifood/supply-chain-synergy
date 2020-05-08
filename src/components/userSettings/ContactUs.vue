@@ -52,7 +52,7 @@ export default {
       this.axios
         .get("/supplier/home/getHomeHelperInfo", {
           headers: {
-            'token': "1"
+            'token': sessionStorage.getItem('token')
           }
           // params: {
           //   operatorId: '操作人ID'

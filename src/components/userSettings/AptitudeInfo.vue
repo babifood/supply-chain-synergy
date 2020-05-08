@@ -96,7 +96,7 @@ export default {
     getAptitudeinfo(){
       this.axios.get("/supplier/provider/getProviderCertificateInfo", {
           headers: {
-            'token': "1",
+            'token': sessionStorage.getItem('token'),
           },
           params: {
             certificateId:this.aptitudeId
@@ -137,8 +137,8 @@ export default {
             'startDate': this.newBegDate
           },{
             headers: {
-              token: '1',
-              operatorId : '1'
+              'token': sessionStorage.getItem('token'),
+              'operatorId' : '1'
             }
           }
         ).then(res =>{

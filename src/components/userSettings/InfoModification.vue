@@ -116,8 +116,8 @@ export default {
             'userRelationBo': arr
           },{
             headers: {
-              token: '1',
-              operatorId:'1'
+              'token': sessionStorage.getItem('token'),
+              'operatorId':'1'
             }
           }
         ).then(function (res) {
@@ -141,7 +141,7 @@ export default {
       this.axios
         .get("/supplier/home/getUserRelation", {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
             'operatorId':'1'
           }
           // params: {

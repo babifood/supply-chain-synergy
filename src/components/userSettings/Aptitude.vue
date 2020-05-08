@@ -55,7 +55,7 @@ export default {
     getAptitudeData() {
       this.axios.get("/supplier/provider/getProviderCertificateList", {
           headers: {
-            'token': "1",
+            'token': sessionStorage.getItem('token'),
             'supplierCode': "1"
           },
           // params: {

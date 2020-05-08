@@ -104,7 +104,7 @@ export default {
       this.axios
         .get("/supplier/order/getOrderDetailList", {
           headers: {
-            token: "tokenValue"
+            'token': sessionStorage.getItem('token')
           },
           params: {
             orderNo: this.orderNo
@@ -133,8 +133,8 @@ export default {
           'orderNo': this.orderNo
         },{
           headers: {
-            token: "1",
-            operatorId : '1'
+            'token': sessionStorage.getItem('token'),
+            'operatorId' : '1'
           }
         }
       ).then(res =>{

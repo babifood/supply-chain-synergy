@@ -90,7 +90,7 @@ export default {
       this.axios
         .get("/supplier/home/getUserInfo", {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
             'operatorId':'1'
           }
           // params: {

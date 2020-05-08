@@ -122,8 +122,8 @@ export default {
         }
         ,{
           headers: {
-            token: "1",
-            operatorId:"1"
+            'token': sessionStorage.getItem('token'),
+            'operatorId':"1"
           }
         }
       ).then(res =>{
@@ -146,7 +146,7 @@ export default {
       this.axios
         .get('/supplier/state/getStateOrderDetailList', {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
           },
           params: {
             stateOrderId:this.orderId,

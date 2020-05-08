@@ -25,12 +25,21 @@ export default {
   components: {},
   data() {
     //这里存放数据
-    return {};
+    return {
+    };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
-  watch: {},
+  watch: {
+    // $route(now,old){     //监控路由变换，控制返回按钮的显示
+    //  if(now.path=="/"){
+    //     this.isShow=false;
+    //  } else{
+    //     this.isShow=true;
+    //  }
+    // }
+  },
   //方法集合
   methods: {
     onClickLeft() {

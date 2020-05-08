@@ -150,7 +150,7 @@ export default {
       this.axios
         .get("/supplier/delivery/getDeliveryOrderList", {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
           },
           params: {
             deliveryIds:qs.stringify(this.deliveryIds)
@@ -229,8 +229,8 @@ export default {
       this.axios.post('/supplier/delivery/updateDeliveryOrderDetail',dataArr
         ,{
           headers: {
-            token: "1",
-            operatorId:"1"
+            'token':sessionStorage.getItem('token'),
+            'operatorId':"1"
           }
         }
       ).then(res =>{

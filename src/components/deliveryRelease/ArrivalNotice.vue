@@ -103,7 +103,7 @@ export default {
       this.axios
         .get("/supplier/arrival/getArrivalOrderInfoList", {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
           },
           params: {
             supplierCode:this.supplier, 	//供应商编码

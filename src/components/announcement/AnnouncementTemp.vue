@@ -68,7 +68,8 @@ export default {
       announcementList: [],
       active: this.parentActive, //公告类型
       announcementTitle: "公告标题",
-      announcementText: ""
+      announcementText: "",
+      tocke:''
     };
   },
   //监听属性 类似于data概念
@@ -80,7 +81,7 @@ export default {
     onLoad(){
       this.axios.get("/supplier/message/getMessageNotifyInfoList", {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
             'supplierCode':'1'
           },
           params: {

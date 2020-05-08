@@ -94,7 +94,7 @@ export default {
       this.axios
         .get("/supplier/state/getStateOrderDetailInfoList", {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
           },
           params: {
             stateOrderId:this.orderId,//对账单号 		

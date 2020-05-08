@@ -58,7 +58,7 @@ export default {
       invitationCode: "",
       gender: "1",
       sessionId:'',
-      token:'测试token'
+      token:''
     };
   },
   //监听属性 类似于data概念

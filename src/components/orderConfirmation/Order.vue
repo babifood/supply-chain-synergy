@@ -66,7 +66,7 @@ export default {
       this.axios
         .get("/supplier/order/getOrderInfoList", {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
             'supplierCode':'1'
           },
           // params: {

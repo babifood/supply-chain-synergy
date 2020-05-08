@@ -133,7 +133,7 @@ export default {
       this.axios
         .get("/supplier/delivery/getDeliveryOrderList", {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
             'operatorId':'1'
           },
           // params: {
@@ -193,7 +193,7 @@ export default {
        this.axios
         .get("/supplier/delivery/getDeliveryOrderHistoryList", {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
             'operatorId':'1'
           },
           params: {

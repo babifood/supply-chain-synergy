@@ -109,7 +109,7 @@ export default {
       this.axios
         .get(this.url, {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
           },
           params: {
             year:this.accountYear,

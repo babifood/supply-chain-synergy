@@ -31,6 +31,7 @@ export default {
   data() {
     //这里存放数据
     return {
+      token:'',
       announcementId :'',//资质id
       announcemenTitle: "中饮巴比食品股有限公司公告通知",
       announcemenDate: "2020-03-05 12:31:44",
@@ -47,7 +48,7 @@ export default {
     getAnnouncementInfo(){
       this.axios.get("/supplier/message/getMessageNotifyInfo", {
           headers: {
-            'token': '1',
+            'token': sessionStorage.getItem('token'),
           },
           params: {
             messageId:this.announcementId
@@ -68,6 +69,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    // this.token = this.$route.params.token;
     this.announcementId = this.$route.params.announcementId;
     this.getAnnouncementInfo();
   },

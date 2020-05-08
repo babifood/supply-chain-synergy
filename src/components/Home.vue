@@ -22,7 +22,7 @@
       background="#fff"
     />
     <van-grid :gutter="10" class="grid">
-      <van-grid-item icon="passed" :info="orderInfo" text="订单确认" to="/Order" />
+      <van-grid-item icon="passed" :info="orderInfo" text="订单确认" :to="'/Order/'+this.token" />
       <van-grid-item icon="bullhorn-o" :info="deliveryReleaseInfo" text="发货通知" to="/DeliveryRelease"/>
       <van-grid-item icon="logistics" :info="arrivalNoticeInfo" text="到货通知" to="/ArrivalNotice"/>
       <van-grid-item icon="records" :info="accountMainInfo" text="账单确认" to="/AccountMain"/>
@@ -67,9 +67,10 @@ export default {
         // }
       }).then(res =>{
         if(res.data.code=="200"){
+          this.token = res.headers.token
           this.orderInfo=res.data.data.matterOrderNum;//订单确认
           this.deliveryReleaseInfo=res.data.data.deliveryOrderNum;//发货通知
-          this.arrivalNoticeInfo=this.res.data.data.arrivalNum;//到货通知(后台接口没有)
+          this.arrivalNoticeInfo=res.data.data.arrivalNum;//到货通知(后台接口没有)
           this.accountMainInfo=res.data.data.stateOrderNum;//账单确认
           this.aptitudeInfo=res.data.data.providerNum;//资质信息
           this.announcementInfo=res.data.data.messageNum;//巴比公告
@@ -84,6 +85,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    sessionStorage.setItem("token",this.$route.params.token);
     this.token = this.$route.params.token;
     console.log("home:获取tocke："+this.token);
     
