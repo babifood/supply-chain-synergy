@@ -147,7 +147,7 @@ export default {
             'token': sessionStorage.getItem('token'),
           },
           params: {
-            deliveryIds:this.deliveryIds
+            deliveryIds:qs.stringify(this.deliveryIds)
           }
         })
         .then(res => {
@@ -187,6 +187,7 @@ export default {
     thisShipmentBlur(productId) {
       //本次发货失去焦点事件
       let en = this.shipmentList.find(item => item.productId===productId);
+      if(en.checked == true) return
       if((parseFloat(en.sentProductNub) + parseFloat(en.thisProductNub))>= parseFloat(en.productNub)){
         en.checked = true;
       }else{
@@ -251,7 +252,9 @@ export default {
   created() {
     //获取路由参数(勾选的订单ID号数组)
     //获取路由参数(勾选的订单ID号数组)
-    this.deliveryIds = this.$route.params.orders;
+    // console.log(this.$route.query.orders);
+    
+    this.deliveryIds = this.$route.query.orders;
     this.loadOrdeProduct();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

@@ -56,9 +56,9 @@ export default {
       }).then(res => {
         console.log(res);
         if(res.data.code == '200'){
-          this.announcemenTitle = res.data.messageTitle;
-          this.announcemenDate = res.data.publishDate;
-          this.announcemenText = res.data.messageContent;
+          this.announcemenTitle = res.data.data.messageTitle;
+          this.announcemenDate = res.data.data.publishDate;
+          this.announcemenText = res.data.data.messageContent;
         }else{
           Toast.fail(res.data.message);
         }   

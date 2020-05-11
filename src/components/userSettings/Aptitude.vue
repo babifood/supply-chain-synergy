@@ -14,10 +14,10 @@
     </van-sticky>
 
     <router-link
-      :to="'/Aptitude/AptitudeInfo/'+item.exNumberId"
+      :to="'/Aptitude/AptitudeInfo/'+item.certificateId"
       class="list_item"
       v-for="item in aptitudeList"
-      :key="item.exNumberId"
+      :key="item.certificateId"
       tag="div"
     >
       <van-row type="flex" justify="center">

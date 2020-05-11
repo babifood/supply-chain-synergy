@@ -220,6 +220,9 @@ export default {
       padding-bottom: 5px;
     }
   }
+  .van-hairline--bottom{
+    z-index:100;
+  }
   .list_title {
     line-height: 40px;
     background-color: #fff;

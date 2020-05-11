@@ -140,5 +140,8 @@ export default {
       text-align: center;
     }
   }
+  .van-hairline--bottom{
+    z-index: 100;
+  }
 }
 </style>

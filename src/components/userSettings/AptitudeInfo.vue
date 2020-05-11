@@ -76,9 +76,9 @@ export default {
       //请求参数
       aptitudeId:this.$route.params.aptitudeId,
 
-      aptitudeName: "证件名称1",
-      begDate: "2020-03-03",
-      endDate: "2020-03-31",
+      aptitudeName: "",
+      begDate: "",
+      endDate: "",
       newBegDate:'',
       newEndDate:'',
       showBegCalendar: false,
@@ -103,9 +103,12 @@ export default {
           }
       }).then(res => {
         if(res.data.code == '200'){
-          this.aptitudeName = res.data.exNumberLx;
-          this.begDate = res.data.exNumberFrom;
-          this.endDate = res.data.exNumberTo;
+          this.aptitudeName = res.data.data.name;
+          this.begDate = res.data.data.startDate;
+          this.endDate = res.data.data.endDate;
+          this.fileList = res.data.data.imageUrls;
+          // this.newBegDate = res.data.data.newStartDate;
+          // this.newEndDate = res.data.data.newEndDate;
         }else{
           Toast.fail(res.data.message);
         }  

@@ -153,7 +153,7 @@ export default {
             'token': sessionStorage.getItem('token'),
           },
           params: {
-            deliveryIds:this.deliveryIds
+            deliveryIds:qs.stringify(this.deliveryIds)
           }
         })
         .then(res => {
@@ -248,7 +248,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     //获取路由参数(勾选的订单ID号数组)
-    console.log(this.$route.query.orders);
+    // console.log(this.$route.query.orders);
     
     this.deliveryIds = this.$route.query.orders;    
     this.loadOrdeProduct();

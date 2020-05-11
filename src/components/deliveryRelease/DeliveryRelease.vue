@@ -2,7 +2,7 @@
 <template>
   <div class="DeliveryRelease_class">
     <van-tabs sticky :offset-top="46" background="#fff" color="chocolate">
-      <van-tab title="代发货订单" class="tab_one">
+      <van-tab title="待发货订单" class="tab_one">
         <van-sticky :offset-top="90">
           <div class="list_head">
             <van-row type="flex" justify="center">
@@ -28,7 +28,7 @@
                   </template>
                 </van-field>
               </van-col>
-              <van-col span="7">{{item.deliveryId}}</van-col>
+              <van-col span="7">{{item.id}}</van-col>
               <van-col span="8">{{item.expireTime}}</van-col>
               <van-col span="5">{{item.matterNum}}</van-col>
             </van-row>
@@ -166,7 +166,7 @@ export default {
           this.orderIdList.push(element.deliveryId);
         }
       });
-      //console.log(this.orderIdList);
+      // console.log(this.orderIdList);
       this.$router.push({path:'/DeliveryRelease/EntiretyFaHuo/',query:{orders:this.orderIdList}});
     },
     separateFaHuo() {
@@ -176,6 +176,7 @@ export default {
           this.orderIdList.push(element.deliveryId);
         }
       });
+      // console.log("测试"+this.orderIdList);
       this.$router.push({path:'/DeliveryRelease/SeparateFaHuo/',query:{orders:this.orderIdList}});
     },
     formatDate(date) {
