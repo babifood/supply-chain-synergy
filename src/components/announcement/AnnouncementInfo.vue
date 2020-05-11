@@ -33,10 +33,10 @@ export default {
     return {
       token:'',
       announcementId :'',//资质id
-      announcemenTitle: "中饮巴比食品股有限公司公告通知",
-      announcemenDate: "2020-03-05 12:31:44",
+      announcemenTitle: "",
+      announcemenDate: "",
       // timesOfView: 20,
-      announcemenText: "   这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）"
+      announcemenText: " "
     };
   },
   //监听属性 类似于data概念

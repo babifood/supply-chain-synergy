@@ -37,12 +37,12 @@
       </div>
       <div class="van-hairline--bottom"></div>
     </van-sticky>
-    <van-list v-model="loading" 
+    <!-- <van-list v-model="loading" 
       :finished="finished" 
       finished-text="没有更多了"
       :error.sync="error"
       error-text="请求失败，点击重新加载"
-      @load="onLoad">
+      @load="onLoad"> -->
       <div class="list_item" v-for="(item,index) in productList" :key="index">
         <van-row type="flex" justify="center" align="center">
           <van-col span="5">{{item.deliveryDate}}</van-col>
@@ -53,7 +53,7 @@
         </van-row>
         <div class="van-hairline--bottom"></div>
       </div>
-    </van-list>
+    <!-- </van-list> -->
   </div>
 </template>
 
@@ -105,7 +105,7 @@ export default {
         .then(res => {
           console.log(res);
           // 加载状态结束
-          this.loading = false;
+          // this.loading = false;
           if(res.data.code == '200'){
             this.productName = res.data.data.matterName;
             this.billMonth = res.data.data.stateDate;
@@ -113,11 +113,12 @@ export default {
             this.totalMoney = res.data.data.sumAmount;
             this.currency = res.data.data.currency;
             this.productList = res.data.data.detailInfoList;
-            if(res.data.data.total>=this.productList.length){
-              this.finished = true;//数据加载完毕
-            }
+            // if(res.data.data.total>=this.productList.length){
+            //   this.finished = true;//数据加载完毕
+            // }
           }else{
-            this.error = true;
+            // this.error = true;
+            Toast.fail(res.data.msg);
           }
         })
         .catch(error => {
@@ -126,7 +127,12 @@ export default {
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    // console.log("mongth:"+this.$route.params.billMonth);
+    // console.log("orderId:"+this.$route.params.orderId);
+    // console.log("productId:"+this.$route.params.productId);
+    this.onLoad();
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前

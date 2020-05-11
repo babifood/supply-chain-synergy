@@ -104,7 +104,7 @@ export default {
          let item ={
            userId:obj.userId,
            username:obj.username,
-           status:obj.status?1:2
+           status:obj.status==true?1:2
          }
          arr.push(item);
       })

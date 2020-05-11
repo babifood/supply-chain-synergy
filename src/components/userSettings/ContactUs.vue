@@ -33,13 +33,13 @@ export default {
   data() {
     //这里存放数据
     return {
-      operatorOnDuty: "陈某某/李某某", //值班人员信息
-      phone: "13500000000/18900000000", //值班人员联系方式
-      complaintDH: "021-44444444", //投诉电话
-      complaintSJ: "13500000000", //投诉手机
-      complaintWX: "ZYBBCGTS", //投诉手机
-      supervisionEmail: "panguanhua@zy1111.com", //监督邮箱
-      informEmail: "panguanhua@zy1111.com" //举报邮箱
+      operatorOnDuty: "", //值班人员信息
+      phone: "", //值班人员联系方式
+      complaintDH: "", //投诉电话
+      complaintSJ: "", //投诉手机
+      complaintWX: "", //投诉手机
+      supervisionEmail: "", //监督邮箱
+      informEmail: "" //举报邮箱
     };
   },
   //监听属性 类似于data概念

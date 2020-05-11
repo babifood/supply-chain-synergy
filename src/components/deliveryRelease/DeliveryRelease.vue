@@ -28,7 +28,7 @@
                   </template>
                 </van-field>
               </van-col>
-              <van-col span="7">{{item.id}}</van-col>
+              <van-col span="7">{{item.deliveryId}}</van-col>
               <van-col span="8">{{item.expireTime}}</van-col>
               <van-col span="5">{{item.matterNum}}</van-col>
             </van-row>

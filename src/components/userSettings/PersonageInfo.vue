@@ -63,10 +63,10 @@ export default {
     //这里存放数据
     return {
       userId: "",
-      compName: "中饮巴比食品有限公司",
-      phone: "13544333333",
-      gender: "1",
-      name: "泮XX"
+      compName: "",
+      phone: "",
+      gender: "",
+      name: ""
     };
   },
   //监听属性 类似于data概念

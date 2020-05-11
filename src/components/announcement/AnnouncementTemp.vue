@@ -21,7 +21,7 @@
       @load="onLoad">
       <router-link
         class="list_item"
-        v-for="item in announcementList"
+        v-for="item in list"
         :key="item.messageId"
         tag="div"
         :to="'/Announcement/AnnouncementInfo/'+item.messageId"
@@ -65,8 +65,7 @@ export default {
       error: false,
       finished: false,
 
-      announcementList: [],
-      active: this.parentActive, //公告类型
+      active: this.parentActive==0?'TY':this.parentActive==1?'XQ':'JC', //公告类型
       announcementTitle: "公告标题",
       announcementText: "",
       tocke:''

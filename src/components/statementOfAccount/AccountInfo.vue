@@ -140,7 +140,23 @@ export default {
       });
     },
     //账单下载
-    accountDownload() {},
+    accountDownload() {
+      this.axios
+        .get('/supplier/file/downloadAccountBill', {
+          headers: {
+            'token': sessionStorage.getItem('token'),
+          },
+          params: {
+            stateOrderId:this.orderId,
+          }
+        })
+        .then(rep => {
+          console.log(rep);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //获取对账明细信息
     getAccountInfoData() {
       this.axios

@@ -148,12 +148,12 @@ export default {
     //加载订单产品数据
     loadOrdeProduct(){
       this.axios
-        .get("/supplier/delivery/getDeliveryOrderList", {
+        .get(" /supplier/delivery/getDeliveryOrderDetailList", {
           headers: {
             'token': sessionStorage.getItem('token'),
           },
           params: {
-            deliveryIds:qs.stringify(this.deliveryIds)
+            deliveryIds:this.deliveryIds
           }
         })
         .then(res => {
