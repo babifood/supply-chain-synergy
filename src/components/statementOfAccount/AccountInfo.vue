@@ -97,13 +97,12 @@ export default {
         "https://img.yzcdn.cn/1.jpg",
         "https://img.yzcdn.cn/2.jpg"
       ], //附件列表
-      compName: "上海金乾制冷科技有限公司", //对账单位
-      billMonth: "2020-02", //账单月份
-      billCode: "202003050001", //账单单号
-      totalAmountPayable: 116559400, //应付总金额
+      compName: "", //对账单位
+      billCode: "", //账单单号
+      totalAmountPayable: 0, //应付总金额
       currency: "CNY", //币种
-      monthlyDeductions: 34, //月度扣款总额
-      actualMoney: 11659172, //实际货款
+      monthlyDeductions: 0, //月度扣款总额
+      actualMoney: 0, //实际货款
       accountProductList: [], //对账单物料集合
       btnStatus:0,//按钮状态
     };
@@ -172,7 +171,7 @@ export default {
         .then(rep => {
           if(rep.data.code == '200'){
             this.compName = rep.data.data.supplierName;
-            this.billMonth = rep.data.data.stateDate;
+            this.billMonth = rep.data.data.yearmonth;
             this.billCode = rep.data.data.stateOrderId;
             this.totalAmountPayable = rep.data.data.sumPayable;
             this.currency = rep.data.data.currency;
@@ -193,6 +192,9 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    // console.log('orderId'+this.$route.params.orderId);
+    //  console.log( 'billMonth'+this.$route.params.billMonth);
+     
     this.getAccountInfoData();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

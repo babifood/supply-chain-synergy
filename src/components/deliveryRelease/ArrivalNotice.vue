@@ -55,7 +55,7 @@
         <van-field label="供应商:" :value="item.supplierName" disabled />
         <van-field label="到货数量:" :value="item.matterNum+item.matterUtil" disabled />
         <van-field label="到货方式:" :value="item.shippingMethod" disabled />
-        <van-field type="textarea" label="发货说明:" :value="item.matterDesc" disabled />
+        <van-field type="textarea" label="发货说明:" :value="item.description" disabled />
       </van-cell-group>
     </div>
   </div>
@@ -116,7 +116,7 @@ export default {
         })
         .then(res => {
           if(res.data.code == '200'){
-            this.arrivalNoticeList = res.data.list
+            this.arrivalNoticeList = res.data.data.list
           }else{
             Toast.fail(res.data.message);
           }
@@ -129,7 +129,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     var data = new Date()
-    this.minDate = new Date(data.getFullYear(), data.getMonth()-1);
+    this.minDate = new Date(data.getFullYear(), data.getMonth());
     this.maxDate = new Date(data.getFullYear(), data.getMonth()+2);
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

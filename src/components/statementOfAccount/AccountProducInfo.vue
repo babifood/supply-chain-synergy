@@ -77,10 +77,9 @@ export default {
       error: false,
       finished: false,
       //头部信息
-      productName:'物料名称XXXXXXX',//商品名称
-      billMonth:'2020-03',//账单月份
-      totalQuantity:10000,//总数量
-      totalMoney:10000,//总金额
+      productName:'',//商品名称
+      totalQuantity:0,//总数量
+      totalMoney:0,//总金额
       currency: "CNY", //币种
     }
   },

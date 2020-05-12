@@ -127,23 +127,27 @@ export default {
     },
     //订单确认
     affirmOrder() {
-       this.axios.post('/supplier/order/updateOrderInfo',
-        {
-          'confirmDesc': this.affirmDESC,
-          'orderNo': this.orderNo
-        },{
-          headers: {
-            'token': sessionStorage.getItem('token'),
-            'operatorId' : '1'
-          }
-        }
-      ).then(res =>{
-        Toast.success(res.data.message);
-      })
-      .catch(error => {
-        // console.log(error);
-        Toast.fail('订单确定失败');
-      });
+       if(this.affirmDESC==null||this.affirmDESC==''){
+         Toast.fail('备注信息不能为空!');
+       }else{
+          this.axios.post('/supplier/order/updateOrderInfo',
+            {
+              'confirmDesc': this.affirmDESC,
+              'orderNo': this.orderNo
+            },{
+              headers: {
+                'token': sessionStorage.getItem('token'),
+                'operatorId' : '1'
+              }
+            }
+          ).then(res =>{
+            Toast.success(res.data.message);
+          })
+          .catch(error => {
+            // console.log(error);
+            Toast.fail('订单确定失败');
+          });
+       } 
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）

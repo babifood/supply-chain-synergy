@@ -43,17 +43,17 @@
     <div>
       <van-panel title="账单扫描件:">
         <div>
-          <van-uploader v-model="billFileList" :max-count="4" />
+          <van-uploader v-model="billFileList" :max-count="4" :after-read="afterRead"/>
         </div>
       </van-panel>
       <van-panel title="发票扫描件:">
         <div>
-          <van-uploader v-model="invoiceFileList" :max-count="4" />
+          <van-uploader v-model="invoiceFileList" :max-count="4" :after-read="afterRead"/>
         </div>
       </van-panel>
       <van-panel title="其他文件:">
         <div>
-          <van-uploader v-model="restsFileList" multiple :max-count="4" />
+          <van-uploader v-model="restsFileList" multiple :max-count="4" :after-read="afterRead"/>
         </div>
       </van-panel>
     </div>
@@ -66,6 +66,7 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
+import qs from 'qs'
 import { Toast } from "vant";
 export default {
   //import引入的组件需要注入到对象中才能使用
@@ -82,16 +83,17 @@ export default {
         "https://img.yzcdn.cn/1.jpg",
         "https://img.yzcdn.cn/2.jpg"
       ], //附件列表
-      compName: "上海金乾制冷科技有限公司", //对账单位
-      billMonth: "2020-02", //账单月份
-      billCode: "202003050001", //账单单号
-      totalAmountPayable: 116559400, //应付总金额
+      compName: "", //对账单位
+      billMonth: "", //账单月份
+      billCode: "", //账单单号
+      totalAmountPayable: 0, //应付总金额
       currency: "CNY", //币种
-      monthlyDeductions: 34, //月度扣款总额
-      actualMoney: 11659172, //实际货款
+      monthlyDeductions: 0, //月度扣款总额
+      actualMoney: 0, //实际货款
       billFileList: [], //账单附件列表
       invoiceFileList: [],//发票附件列表
       restsFileList:[],//其他文件附件列表
+      submitFaleValues:[]//保存提交需要的文件参数
     };
   },
   //监听属性 类似于data概念
@@ -100,8 +102,67 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    submit(){
-      console.log(this.billFileList);
+    afterRead(file) {
+      file.status = 'uploading';
+      file.message = '上传中...';
+      const formData = new FormData();  // 声明一个FormData对象
+	    formData.append("files", file);
+      this.axios.post('/supplier/file/multiFileUpload',formData,
+          {
+            headers: {
+              'token': sessionStorage.getItem('token'),
+              "content-type": "multipart/form-data"
+            }
+          }
+        ).then(function (res) {
+          console.log(res);
+          if(res.data.code=='200'){
+            file.status = 'done';
+            file.message = '上传成功';
+          }else{
+            file.status = 'failed';
+            file.message = '上传失败';
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          file.status = 'failed';
+          file.message = '上传失败';
+        });
+    },
+    uploadFileVelue(array,fileDesc){
+      array.forEach(file =>{
+        let f = {
+          stateOrderId:this.billCode,
+          fileId:'',
+          fileName:file.file.name,
+          fileDesc:fileDesc
+        }
+        this.submitFaleValues.push(f)
+      })
+    },
+    submit(){//对账单附件上传提交
+      uploadFileVelue(this.billFileList,'账单扫描件')
+      uploadFileVelue(this.restsFileList,'发票扫描件')
+      uploadFileVelue(this.submitFaleValues,'其他文件')
+      console.log(this.submitFaleValues);
+      this.axios.post('/supplier/state/updateStateOrderFile',this.submitFaleValues,
+          {
+            headers: {
+              'token': sessionStorage.getItem('token'),
+            }
+          }
+        ).then(function (res) {
+          console.log(res);
+          if(res.data.code=='200'){
+            
+          }else{
+           
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
     //获取附件数据
     getAccessoryData(){
@@ -117,7 +178,7 @@ export default {
         console.log(res);
         if(res.data.code == '200'){
           this.compName = res.data.data.supplierName; //对账单位
-          this.billMonth = res.data.data.stateDate; //账单月份
+          this.billMonth = res.data.data.yearmonth; //账单月份
           this.billCode = res.data.data.stateOrderId; //账单单号
           this.totalAmountPayable = res.data.data.sumPayable; //应付总金额
           this.currency = res.data.data.currency; //币种

@@ -171,6 +171,7 @@ export default {
       var returnArray = new Array();
       array.forEach(obj =>{
         let item = {
+          deliveryId:obj.deliveryId,//发货单ID
           productId:obj.detailId,//产品ID
           productName:obj.matterName,//产品名称
           orderCode:obj.id,//订单号
@@ -214,14 +215,15 @@ export default {
       var dataArr = new Array()
       this.entiretyList.forEach(function (obj){
         let item = {
-          deliveryId:obj.orderCode,//发货单id 		
+          deliveryId:obj.deliveryId,//发货单id 		
           detailId:obj.productId,//发货详细id	
-          expectTime:dateTimeValue,//预计到货时间 		
+          expectTime:dateTimeValue+':00',//预计到货时间 		
           matterNum:obj.thisProductNub,//物料数量 	
           matterUtil:obj.unit,//物料单位 	 		
           shippingMethod:distributionValue,//配送类型 
           description:shipmentDect,	//描述
-          fileList:obj.fileList //附件
+          fileList:obj.fileList, //附件
+          isFinish:obj.checked==true?1:0//发货状态0:false,1:true
         }
         dataArr.push(item);
       })

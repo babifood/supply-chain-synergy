@@ -165,6 +165,7 @@ export default {
       var returnArray = new Array();
       array.forEach(function(obj){
         let item = {
+          deliveryId:obj.deliveryId,//发货单id 
           productId:obj.detailId,//产品ID
           productName:obj.matterName,//产品名称
           orderCode:obj.id,//订单号
@@ -218,14 +219,15 @@ export default {
       let en = this.shipmentList.find(item => item.productId===productId); 
       var dataArr = new Array()
       let item = {
-        deliveryId:en.orderCode,//发货单id 		
+        deliveryId:en.deliveryId,//发货单id 		
         detailId:en.productId,//发货详细id	
-        expectTime:en.predictAOG_date,//预计到货时间 		
+        expectTime:en.predictAOG_date+':00',//预计到货时间 		
         matterNum:en.thisProductNub,//物料数量 	
         matterUtil:en.unit,//物料单位 	 		
         shippingMethod:en.distribution,//配送类型 
         description:en.productDESC,	//描述
-        fileList:en.fileList
+        fileList:en.fileList,
+        isFinish:en.checked==true?1:0//发货状态0:false,1:true
       }
       dataArr.push(item);
       this.axios.post('/supplier/delivery/updateDeliveryOrderDetail',dataArr

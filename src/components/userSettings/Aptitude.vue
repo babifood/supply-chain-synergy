@@ -23,7 +23,7 @@
       <van-row type="flex" justify="center">
         <van-col span="8">{{item.exNumberLx}}</van-col>
         <van-col span="7">{{item.exNumberTo}}</van-col>
-        <van-col span="5">{{item.status}}</van-col>
+        <van-col span="5">{{item.isLast | showStatus}}</van-col>
         <van-col span="1">
           <van-icon name="arrow" />
         </van-col>
@@ -50,6 +50,11 @@ export default {
   computed: {},
   //监控data中的数据变化
   watch: {},
+  filters: {
+    showStatus: function (value) {
+      return value==0?'未上传':value==1?'已上传':value;
+    }
+  },
   //方法集合
   methods: {
     getAptitudeData() {
@@ -71,7 +76,7 @@ export default {
       }).catch(error => {
         console.log(error);
       });
-    }
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {

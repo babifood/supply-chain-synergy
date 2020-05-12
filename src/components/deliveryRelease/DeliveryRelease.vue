@@ -85,13 +85,13 @@
         <!-- 历史发货通知列表 -->
         <div class="history_list" v-for="item in historyList" :key="item.deliverGoodsId">
           <van-cell-group>
-            <van-field label="订单号:" :value="item.orderCode" disabled />
-            <van-field label="物料名称:" :value="item.productName" disabled />
-            <van-field label="发货日期:" :value="item.deliverGoodsDate" disabled />
-            <van-field label="发货数量:" :value="item.deliverGoodsNum" disabled />
-            <van-field label="预计到货时间:" :value="item.predictDate" disabled />
-            <van-field label="送货方式:" :value="item.transportMode" disabled />
-            <van-field type="textarea" label="发货说明:" :value="item.deliverGoodsDect" disabled />
+            <van-field label="订单号:" :value="item.deliveryOrderId" disabled />
+            <van-field label="物料名称:" :value="item.matterName" disabled />
+            <van-field label="发货日期:" :value="item.deliveryDate" disabled />
+            <van-field label="发货数量:" :value="item.matterNum" disabled />
+            <van-field label="预计到货时间:" :value="item.expectTime" disabled />
+            <van-field label="送货方式:" :value="item.shippingMethod" disabled />
+            <van-field type="textarea" label="发货说明:" :value="item.description" disabled />
           </van-cell-group>
         </div>
       </van-tab>
@@ -219,7 +219,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     var data = new Date()
-    this.minDate = new Date(data.getFullYear(), data.getMonth()-1);
+    this.minDate = new Date(data.getFullYear(), data.getMonth());
     this.maxDate = new Date(data.getFullYear(), data.getMonth()+2);
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

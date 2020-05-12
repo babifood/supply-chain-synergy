@@ -135,6 +135,7 @@ export default {
         this.axios.post('/supplier/provider/updateProviderCertificateInfo',
           {
             'certificateId': this.aptitudeId,
+            'certificateName':this.aptitudeName,
             'endDate': this.newEndDate,
             'imageUrl': this.fileList,//参数格式不匹配
             'startDate': this.newBegDate
