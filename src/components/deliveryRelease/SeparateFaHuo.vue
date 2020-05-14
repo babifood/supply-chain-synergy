@@ -45,7 +45,7 @@
         <div>
           <van-row type="flex" justify="center">
             <van-col span="23">
-              <van-uploader v-model="item.fileList" multiple :max-count="4" />
+              <van-uploader v-model="item.fileList" multiple :max-count="4" :after-read="afterRead"/>
             </van-col>
           </van-row>
         </div>
@@ -139,6 +139,34 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    afterRead(file) {
+      file.status = 'uploading';
+      file.message = '上传中...';
+      const formData = new FormData();  // 声明一个FormData对象
+	    formData.append("files", file.file);
+      this.axios.post('/supplier/file/multiFileUpload',formData,
+          {
+            headers: {
+              'token': sessionStorage.getItem('token'),
+              "content-type": "multer/form-data"
+            }
+          }
+        ).then(function (res) {
+          console.log(res);
+          if(res.data.code=='200'){
+            file.status = 'done';
+            file.message = '上传成功';
+          }else{
+            file.status = 'failed';
+            file.message = '上传失败';
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          file.status = 'failed';
+          file.message = '上传失败';
+        });
+    },
     //加载订单产品数据
     loadOrdeProduct(){
       this.axios
@@ -163,7 +191,7 @@ export default {
     },
     objectBindingValue(array){//对象绑定值
       var returnArray = new Array();
-      array.forEach(function(obj){
+      array.forEach(obj =>{
         let item = {
           deliveryId:obj.deliveryId,//发货单id 
           productId:obj.detailId,//产品ID
@@ -175,7 +203,7 @@ export default {
           thisProductNub:null,//本次发货数量
           unit:obj.matterUtil,//单位
           checked:false,//是否发全
-          fileList:[],//附件列表
+          fileList:this.fileSetFileList(obj.orderFiles),//附件列表
           predictAOG_date:'',//预计到货时间
           distribution:'',//配送方式
           productDESC:'',//备注说明
@@ -194,6 +222,33 @@ export default {
       }else{
         en.checked = false;
       }
+    },
+    fileSetFileList(resultFile){//文件返回值转换
+      let returnFiles = [];
+      resultFile.forEach(f =>{
+          this.axios.get("/supplier/file/fileDownload", {
+            headers: {
+              'token': sessionStorage.getItem('token')
+            },
+            responseType: 'arraybuffer',
+            params: {
+              fileId: f.fileId
+            }
+        }).then(res => {
+          let fileObj = {
+            content:'data:image/png;base64,'+ btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')),
+            file:{
+              name:f.fileName
+            },
+            fileId:f.fileId,
+            status:'done'
+          }
+          returnFiles.push(fileObj)
+        }).catch(error => {
+          console.log(error);
+        });
+      })
+      return returnFiles;
     },
     clickDateTimeShowPicker(index){
       this.pitchOnIndex = index;
@@ -216,7 +271,16 @@ export default {
     },
     shipmentSubmit(productId) {
       //发货提交
-      let en = this.shipmentList.find(item => item.productId===productId); 
+      let en = this.shipmentList.find(item => item.productId===productId);
+      let fileObj = [];
+      en.fileList.forEach((obj,index) =>{
+        let fileitem = {
+          fileName:obj.file.name,
+          fileDesc:obj.file.name+'_desc',
+          fileSort:index
+        }
+        fileObj.push(fileitem)
+      })
       var dataArr = new Array()
       let item = {
         deliveryId:en.deliveryId,//发货单id 		
@@ -226,7 +290,7 @@ export default {
         matterUtil:en.unit,//物料单位 	 		
         shippingMethod:en.distribution,//配送类型 
         description:en.productDESC,	//描述
-        fileList:en.fileList,
+        fileList:fileObj,//附件对象
         isFinish:en.checked==true?1:0//发货状态0:false,1:true
       }
       dataArr.push(item);

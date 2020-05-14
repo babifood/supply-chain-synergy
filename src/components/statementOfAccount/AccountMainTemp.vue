@@ -137,12 +137,12 @@ export default {
         });
     },
     billBindingValue(array){//待确认订单对象绑定值
-      var returnArray = new Array();
+      var returnArray = []
       array.forEach(obj =>{
         let item = {
           billMonth:obj.stateDate,//账单月份
           billNo:obj.stateOrderId,//账单号
-          billStatus:obj.stateStatus==0?'未确认':value==1?'已确认':value==2?'已失效':'',//订单状态
+          billStatus:obj.stateStatus==0?'未确认':obj.stateStatus==1?'已确认':obj.stateStatus==2?'已失效':'',//订单状态
           billStatusVle:obj.stateStatus,
           billMonthFormat:obj.stateDateStr,//账单月份格式化（yyyy年mm月）
         }
@@ -151,12 +151,12 @@ export default {
       return returnArray;
     },
     fileBindingValue(array){//账单文件上传对象绑定值
-      var returnArray = new Array();
+      var returnArray = []
       array.forEach(obj =>{
         let item = {
           billMonth:obj.stateDate,//账单月份
-          billNo:obj.stateOrderId,//账单号
-          billStatus:obj.fileStatus==0?'未上传':value==1?'已上传':'',//订单状态
+          billNo:obj.stateOrderId,//账单号fileStatus
+          billStatus:obj.fileStatus==0?'未上传':obj.fileStatus==1?'已上传':'',//订单状态
           billStatusVle:obj.fileStatus,
           billMonthFormat:'',//账单月份格式化（yyyy年mm月）
         }

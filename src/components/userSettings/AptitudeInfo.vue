@@ -47,7 +47,7 @@
           <div>
             <van-row type="flex" justify="center">
               <van-col span="23">
-                <van-uploader v-model="fileList" multiple :max-count="4" />
+                <van-uploader v-model="fileList" multiple :max-count="4" :after-read="afterRead"/>
               </van-col>
             </van-row>
           </div>
@@ -92,6 +92,34 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    afterRead(file) {//附件上传
+      file.status = 'uploading';
+      file.message = '上传中...';
+      const formData = new FormData();  // 声明一个FormData对象
+	    formData.append("files", file.file);
+      this.axios.post('/supplier/file/multiFileUpload',formData,
+          {
+            headers: {
+              'token': sessionStorage.getItem('token'),
+              "content-type": "multer/form-data"
+            }
+          }
+        ).then(function (res) {
+          console.log(res);
+          if(res.data.code=='200'){
+            file.status = 'done';
+            file.message = '上传成功';
+          }else{
+            file.status = 'failed';
+            file.message = '上传失败';
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          file.status = 'failed';
+          file.message = '上传失败';
+        });
+    },
     //获取供应商详情
     getAptitudeinfo(){
       this.axios.get("/supplier/provider/getProviderCertificateInfo", {
@@ -106,7 +134,8 @@ export default {
           this.aptitudeName = res.data.data.name;
           this.begDate = res.data.data.startDate;
           this.endDate = res.data.data.endDate;
-          this.fileList = res.data.data.imageUrls;
+          this.fileSetFileList(res.data.data.imageUrls,this.fileList)
+          // this.fileList = res.data.data.imageUrls;
           // this.newBegDate = res.data.data.newStartDate;
           // this.newEndDate = res.data.data.newEndDate;
         }else{
@@ -115,6 +144,31 @@ export default {
       }).catch(error => {
         console.log(error);
       });
+    },
+    fileSetFileList(resultFile,fileTypeList){
+      resultFile.forEach(f =>{
+          this.axios.get("/supplier/file/fileDownload", {
+            headers: {
+              'token': sessionStorage.getItem('token')
+            },
+            responseType: 'arraybuffer',
+            params: {
+              fileId: f.fileId
+            }
+        }).then(res => {
+          let fileObj = {
+            content:'data:image/png;base64,'+ btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')),
+            file:{
+              name:f.fileName
+            },
+            fileId:f.fileId,
+            status:'done'
+          }
+          fileTypeList.push(fileObj)
+        }).catch(error => {
+          console.log(error);
+        });
+      })
     },
     formatDate(date) {
       return moment(date).format("YYYY-MM-DD");
@@ -129,15 +183,23 @@ export default {
       this.showEndCalendar = false;
     },
     submit(){
+      
       if(this.newEndDate == ''&& this.newBegDate == ''){
           Toast.fail('日期不能为空');
       }else{
+        let fileNames = []
+        this.fileList.forEach(file =>{
+          let item ={
+            fileName:file.file.name
+          }
+          fileNames.push(item)
+        })
         this.axios.post('/supplier/provider/updateProviderCertificateInfo',
           {
             'certificateId': this.aptitudeId,
             'certificateName':this.aptitudeName,
             'endDate': this.newEndDate,
-            'imageUrl': this.fileList,//参数格式不匹配
+            'imageUrl': fileNames,//参数格式不匹配
             'startDate': this.newBegDate
           },{
             headers: {

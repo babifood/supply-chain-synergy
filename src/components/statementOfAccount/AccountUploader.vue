@@ -106,12 +106,12 @@ export default {
       file.status = 'uploading';
       file.message = '上传中...';
       const formData = new FormData();  // 声明一个FormData对象
-	    formData.append("files", file);
+	    formData.append("files", file.file);
       this.axios.post('/supplier/file/multiFileUpload',formData,
           {
             headers: {
               'token': sessionStorage.getItem('token'),
-              "content-type": "multipart/form-data"
+              "content-type": "multer/form-data"
             }
           }
         ).then(function (res) {
@@ -131,20 +131,20 @@ export default {
         });
     },
     uploadFileVelue(array,fileDesc){
-      array.forEach(file =>{
+      array.forEach(obj =>{
         let f = {
           stateOrderId:this.billCode,
-          fileId:'',
-          fileName:file.file.name,
+          fileId:obj.fileId,
+          fileName:obj.file.name,
           fileDesc:fileDesc
         }
         this.submitFaleValues.push(f)
       })
     },
     submit(){//对账单附件上传提交
-      uploadFileVelue(this.billFileList,'账单扫描件')
-      uploadFileVelue(this.restsFileList,'发票扫描件')
-      uploadFileVelue(this.submitFaleValues,'其他文件')
+      this.uploadFileVelue(this.billFileList,'bill')
+      this.uploadFileVelue(this.invoiceFileList,'invoice')
+      this.uploadFileVelue(this.restsFileList,'rests')
       console.log(this.submitFaleValues);
       this.axios.post('/supplier/state/updateStateOrderFile',this.submitFaleValues,
           {
@@ -155,13 +155,13 @@ export default {
         ).then(function (res) {
           console.log(res);
           if(res.data.code=='200'){
-            
+            Toast.success('附件上传保存成功');
           }else{
-           
+            Toast.fail(res.message);
           }
         })
         .catch(function (error) {
-          console.log(error);
+          Toast.fail(error);
         });
     },
     //获取附件数据
@@ -185,7 +185,7 @@ export default {
           this.monthlyDeductions = res.data.data.monthWithhold; //月度扣款总额
           this.actualMoney = res.data.data.actualSum;//实际货款
           //更具后台返回的文件数组来组织对应的文件数组
-          this.fileConvertTypeListFile(res.data.data.fileInfoMap.str)
+          this.fileConvertTypeListFile(res.data.data.fileInfoMap)
         }else{
           Toast.fail(res.data.msg);
         }  
@@ -193,9 +193,34 @@ export default {
         console.log(error);
       });
     },
-    fileConvertTypeListFile(fileList){
-      fileList.forEach(obj =>{
-        console.log(obj);
+    fileConvertTypeListFile(fileObjs){
+      this.fileSetFileList(fileObjs.bill,this.billFileList);
+      this.fileSetFileList(fileObjs.invoice,this.invoiceFileList);
+      this.fileSetFileList(fileObjs.rests,this.restsFileList);
+    },
+    fileSetFileList(resultFile,fileTypeList){
+      resultFile.forEach(f =>{
+          this.axios.get("/supplier/file/fileDownload", {
+            headers: {
+              'token': sessionStorage.getItem('token')
+            },
+            responseType: 'arraybuffer',
+            params: {
+              fileId: f.fileId
+            }
+        }).then(res => {
+          let fileObj = {
+            content:'data:image/png;base64,'+ btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')),
+            file:{
+              name:f.fileName
+            },
+            fileId:f.fileId,
+            status:'done'
+          }
+          fileTypeList.push(fileObj)
+        }).catch(error => {
+          console.log(error);
+        });
       })
     }
   },
