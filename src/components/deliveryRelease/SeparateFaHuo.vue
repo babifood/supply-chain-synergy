@@ -64,6 +64,8 @@
             <van-datetime-picker
               type="datetime"
               v-model="currentDate"
+              :min-date="minDate"
+              :max-date="maxDate"
               @cancel="dateTimeShowPicker = false"
               @confirm="onDateTimeConfirm"
             />
@@ -124,10 +126,14 @@ export default {
   data() {
     //这里存放数据
     return {
+      //发货时间控制
+      minDate: new Date(),
+      maxDate: new Date(new Date().getFullYear()+5, 12),
+      currentDate: new Date(),
+
       deliveryIds:[],//父页面选中的发货订单ID数组
       distributionColumns: ["集装箱卡车", "快递配送"], //配送方式选择
       distributionShowPicker: false, //配送方式下拉显示控制
-      currentDate: new Date(),
       dateTimeShowPicker: false, //预计到货时间显示隐藏
       pitchOnIndex:null,//选中的下标
       shipmentList: []

@@ -28,7 +28,7 @@
       >
         <van-row type="flex" justify="center">
           <van-col span="2">
-            <van-tag round type="danger" v-show="item.status">新</van-tag>
+            <van-tag round type="danger" :v-show="item.status==0">新</van-tag>
           </van-col>
           <van-col span="5">{{item.publishDate}}</van-col>
           <van-col span="15">

@@ -68,6 +68,8 @@
             <van-datetime-picker
               type="datetime"
               v-model="currentDate"
+              :min-date="minDate"
+              :max-date="maxDate"
               @cancel="dateTimeShowPicker = false"
               @confirm="onDateTimeConfirm"
             />
@@ -127,13 +129,17 @@ export default {
   data() {
     //这里存放数据
     return {
+      //发货时间控制
+      minDate: new Date(),
+      maxDate: new Date(new Date().getFullYear()+5, 12),
+      currentDate: new Date(),
+
       deliveryIds:[],//父页面选中的发货订单ID数组
       entiretyList:[],//整单发货商品明细列表
       shipmentDect: "",
       distributionValue: "", //配送方式
       distributionColumns: ["集装箱卡车", "快递配送"], //配送方式选择
       distributionShowPicker: false, //配送方式下拉显示控制
-      currentDate: new Date(),
       dateTimeValue: "",
       dateTimeShowPicker: false, //预计到货时间显示隐藏
       btnStatus:0,//按钮状态
@@ -268,7 +274,7 @@ export default {
       let distributionValue = this.distributionValue;
       let shipmentDect = this.shipmentDect;
       var dataArr = new Array()
-      this.entiretyList.forEach(function (obj){
+      this.entiretyList.forEach(obj =>{
         let item = {
           deliveryId:obj.deliveryId,//发货单id 		
           detailId:obj.productId,//发货详细id	
