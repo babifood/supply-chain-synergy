@@ -74,8 +74,8 @@ export default {
     return {
       supplier: "", //供应商
       storageLocation: "", //库位
-      begDateVal: "", //开始时间
-      endDateVal: "", //结束时间
+      begDateVal:"" , //开始时间
+      endDateVal:"", //结束时间
       minDate: null,
       maxDate: null,
       showBegCalendar: false,
@@ -129,8 +129,12 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     var data = new Date()
-    this.minDate = new Date(data.getFullYear(), data.getMonth());
-    this.maxDate = new Date(data.getFullYear(), data.getMonth()+2);
+    var minDataVal = new Date(data.getFullYear(), data.getMonth());
+    var maxDataVal = new Date(data.getFullYear(), data.getMonth()+2);
+    this.minDate = minDataVal;
+    this.maxDate = maxDataVal;
+    this.begDateVal = this.formatDate(data); //开始时间
+    this.endDateVal = this.formatDate(data);//结束时间
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

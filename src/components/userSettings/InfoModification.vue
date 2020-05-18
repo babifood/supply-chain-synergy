@@ -152,6 +152,8 @@ export default {
           console.log(res);
           this.userName = res.data.data.username;
           this.mobile = res.data.data.mobile;
+          this.newUserName = res.data.data.username;
+          this.newMobile = res.data.data.mobile;
           this.gender = res.data.data.sex+'';
           this.accountList = this.convert(res.data.data.userRelations);
         })

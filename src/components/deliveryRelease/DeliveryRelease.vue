@@ -219,8 +219,11 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     var data = new Date()
-    this.minDate = new Date(data.getFullYear(), data.getMonth());
-    this.maxDate = new Date(data.getFullYear(), data.getMonth()+2);
+    var data = new Date()
+    var minDataVal = new Date(data.getFullYear(), data.getMonth());
+    var maxDataVal = new Date(data.getFullYear(), data.getMonth()+2);
+    this.minDate = minDataVal;
+    this.maxDate = maxDataVal;
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
