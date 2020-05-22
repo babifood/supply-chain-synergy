@@ -9,7 +9,9 @@
         left-arrow
         fixed:true
         @click-left="onClickLeft"
+        v-if="showBtn"
       />
+      <van-nav-bar title="供应链协同平台" fixed:true v-if="showNotBtn"/>
     </van-sticky>
     <!-- 组件容器 -->
     <router-view></router-view>
@@ -26,19 +28,23 @@ export default {
   data() {
     //这里存放数据
     return {
+      showBtn:true,
+      showNotBtn:false
     };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {
-    // $route(now,old){     //监控路由变换，控制返回按钮的显示
-    //  if(now.path=="/"){
-    //     this.isShow=false;
-    //  } else{
-    //     this.isShow=true;
-    //  }
-    // }
+    $route(to,from){
+      if(to.name=='CustomerBinding'||to.name=='Home'){
+        this.showBtn = false;
+        this.showNotBtn = true;
+      }else{
+        this.showBtn = true;
+        this.showNotBtn = false;
+      }
+    }
   },
   //方法集合
   methods: {

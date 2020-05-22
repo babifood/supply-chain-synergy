@@ -41,7 +41,7 @@
             <van-button round type="primary" size="small" :disabled="btnStatus === 1" @click="accountAffirm">账单确认</van-button>
           </van-col>
           <van-col span="6">
-            <van-button round type="primary" size="small" @click="accountDownload">账单下载</van-button>
+            <!-- <van-button round type="primary" size="small" @click="accountDownload">账单下载</van-button> -->
           </van-col>
         </van-row>
       </div>
@@ -140,21 +140,7 @@ export default {
     },
     //账单下载
     accountDownload() {
-      this.axios
-        .get('/supplier/file/downloadAccountBill', {
-          headers: {
-            'token': sessionStorage.getItem('token'),
-          },
-          params: {
-            stateOrderId:this.orderId,
-          }
-        })
-        .then(rep => {
-          console.log(rep);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      
     },
     //获取对账明细信息
     getAccountInfoData() {
