@@ -27,7 +27,7 @@
               placeholder="选择日期"
               @click="showBegCalendar = true"
             />
-            <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" />
+            <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" :min-date="minDate" :max-date="maxDate" :default-date="defaultDate" />
           </van-col>
           <van-col span="10">
             <van-field
@@ -40,7 +40,7 @@
               placeholder="选择日期"
               @click="showEndCalendar = true"
             />
-            <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" />
+            <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" :min-date="minDate" :max-date="maxDate" :default-date="defaultDate"/>
           </van-col>
         </van-row>
         <van-panel title="附件上传">
@@ -73,6 +73,10 @@ export default {
   data() {
     //这里存放数据
     return {
+      //日历可选的区间
+      minDate:null,
+      maxDate: null,
+      defaultDate:null,
       //请求参数
       aptitudeId:this.$route.params.aptitudeId,
 
@@ -222,6 +226,12 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.getAptitudeinfo();
+    var data = new Date()
+    var minDataVal = new Date(data.getFullYear()-1, data.getMonth());
+    var maxDataVal = new Date(data.getFullYear()+4, data.getMonth()+2);
+    this.minDate = minDataVal;
+    this.maxDate = maxDataVal;
+    this.defaultDate = data;
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

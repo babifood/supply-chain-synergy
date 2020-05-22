@@ -1,119 +1,124 @@
 <!-- 整单发货页面 -->
 <template>
   <div class="EntiretyFaHuo_class">
-    <div v-for="(item) in entiretyList" :key="item.productId">
-      <van-row>
-        <van-col span="24">
-          <van-field label="商品名称:" label-width="65px" :value="item.productName" disabled />
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="24">
-          <van-field label="订单号:" label-width="65px" :value="item.orderCode" disabled />
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="24">
-          <van-field label="交货地址:" label-width="65px" :value="item.address" disabled />
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="12">
-          <van-field label="订单数量:" label-width="65px" type="number" :value="item.productNub+item.unit" disabled />
-        </van-col>
-        <van-col span="12">
-          <van-field label="已发货:" label-width="65px" type="number" :value="item.sentProductNub" disabled />
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="12">
-          <van-field
-            label="本次发货:"
-            label-width="65px"
-            type="number"
-            required
-            placeholder="请输入数量"
-            @blur="thisShipmentBlur(item.productId)"
-            v-model="item.thisProductNub"
-          />
-        </van-col>
-        <van-col span="12" class="checkbox_class">
-          <van-checkbox v-model="item.checked" shape="square">已发全</van-checkbox>
-        </van-col>
-      </van-row>
-      <van-panel title="附件上传">
-        <div>
-          <van-row type="flex" justify="center">
-            <van-col span="23">
-              <van-uploader v-model="item.fileList" multiple :max-count="4" :after-read="afterRead"/>
-            </van-col>
-          </van-row>
-        </div>
-      </van-panel>
-      <van-divider :style="{ color: 'chocolate', borderColor: 'chocolate'}"></van-divider>
-    </div>
-    <!-- 底部区域填写预计发货时间、配送方式、备注信息 -->
-    <div class="footer_button">
-      <van-row>
-        <van-col span="24">
-          <van-field
-            readonly
-            clickable
-            label="预计到货时间:"
-            :value="dateTimeValue"
-            placeholder="请选择到货时间"
-            @click="dateTimeShowPicker = true"
-          />
-          <van-popup v-model="dateTimeShowPicker" position="bottom">
-            <van-datetime-picker
-              type="datetime"
-              v-model="currentDate"
-              :min-date="minDate"
-              :max-date="maxDate"
-              @cancel="dateTimeShowPicker = false"
-              @confirm="onDateTimeConfirm"
+    <van-form @submit="shipmentSubmit">
+      <div v-for="(item) in entiretyList" :key="item.productId">
+        <van-row>
+          <van-col span="24">
+            <van-field label="商品名称:" label-width="65px" :value="item.productName" disabled />
+          </van-col>
+        </van-row>
+        <van-row>
+          <van-col span="24">
+            <van-field label="订单号:" label-width="65px" :value="item.orderCode" disabled />
+          </van-col>
+        </van-row>
+        <van-row>
+          <van-col span="24">
+            <van-field label="交货地址:" label-width="65px" :value="item.address" disabled />
+          </van-col>
+        </van-row>
+        <van-row>
+          <van-col span="12">
+            <van-field label="订单数量:" label-width="65px" type="number" :value="item.productNub+item.unit" disabled />
+          </van-col>
+          <van-col span="12">
+            <van-field label="已发货:" label-width="65px" type="number" :value="item.sentProductNub" disabled />
+          </van-col>
+        </van-row>
+        <van-row>
+          <van-col span="12">
+            <van-field
+              label="本次发货:"
+              label-width="65px"
+              type="number"
+              required
+              placeholder="请输入数量"
+              @blur="thisShipmentBlur(item.productId)"
+              v-model="item.thisProductNub"
+              :rules="[{ required: true, message: '请输入数量' }]"
             />
-          </van-popup>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="24">
-          <van-field
-            readonly
-            clickable
-            label="配送方式:"
-            :value="distributionValue"
-            placeholder="请选择配送方式"
-            @click="distributionShowPicker = true"
-          />
-          <van-popup v-model="distributionShowPicker" position="bottom">
-            <van-picker
-              show-toolbar
-              :columns="distributionColumns"
-              @cancel="distributionShowPicker = false"
-              @confirm="onConfirm"
+          </van-col>
+          <van-col span="12" class="checkbox_class">
+            <van-checkbox v-model="item.checked" shape="square">已发全</van-checkbox>
+          </van-col>
+        </van-row>
+        <van-panel title="附件上传">
+          <div>
+            <van-row type="flex" justify="center">
+              <van-col span="23">
+                <van-uploader v-model="item.fileList" multiple :max-count="4" :after-read="afterRead"/>
+              </van-col>
+            </van-row>
+          </div>
+        </van-panel>
+        <van-divider :style="{ color: 'chocolate', borderColor: 'chocolate'}"></van-divider>
+      </div>
+      <!-- 底部区域填写预计发货时间、配送方式、备注信息 -->
+      <div class="footer_button">
+        <van-row>
+          <van-col span="24">
+            <van-field
+              readonly
+              clickable
+              label="预计到货时间:"
+              :value="dateTimeValue"
+              placeholder="请选择到货时间"
+              @click="dateTimeShowPicker = true"
+              :rules="[{ required: true, message: '请选择到货时间' }]"
             />
-          </van-popup>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col span="24">
-          <van-field
-            v-model="shipmentDect"
-            rows="2"
-            autosize
-            label="发货说明:"
-            type="textarea"
-            placeholder="请输入留言"
-          />
-        </van-col>
-      </van-row>
-      <van-row type="flex" justify="center">
-        <van-col span="23">
-          <van-button round type="primary" block :disabled="btnStatus === 1" @click="shipmentSubmit">发货提交</van-button>
-        </van-col>
-      </van-row>
-    </div>
+            <van-popup v-model="dateTimeShowPicker" position="bottom">
+              <van-datetime-picker
+                type="datetime"
+                v-model="currentDate"
+                :min-date="minDate"
+                :max-date="maxDate"
+                @cancel="dateTimeShowPicker = false"
+                @confirm="onDateTimeConfirm"
+              />
+            </van-popup>
+          </van-col>
+        </van-row>
+        <van-row>
+          <van-col span="24">
+            <van-field
+              readonly
+              clickable
+              label="配送方式:"
+              :value="distributionValue"
+              placeholder="请选择配送方式"
+              @click="distributionShowPicker = true"
+              :rules="[{ required: true, message: '请选择配送方式' }]"
+            />
+            <van-popup v-model="distributionShowPicker" position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="distributionColumns"
+                @cancel="distributionShowPicker = false"
+                @confirm="onConfirm"
+              />
+            </van-popup>
+          </van-col>
+        </van-row>
+        <van-row>
+          <van-col span="24">
+            <van-field
+              v-model="shipmentDect"
+              rows="2"
+              autosize
+              label="发货说明:"
+              type="textarea"
+              placeholder="请输入留言"
+            />
+          </van-col>
+        </van-row>
+        <van-row type="flex" justify="center">
+          <van-col span="23">
+            <van-button round type="primary" block :disabled="btnStatus === 1" native-type="submit">发货提交</van-button>
+          </van-col>
+        </van-row>
+      </div>
+    </van-form>
   </div>
 </template>
 
@@ -342,7 +347,7 @@ export default {
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
 .EntiretyFaHuo_class {
-  padding-bottom: 170px;
+  padding-bottom: 220px;
   .van-cell {
     padding: 5px 16px;
   }
@@ -363,7 +368,7 @@ export default {
     z-index: 1;
     box-sizing: content-box;
     width: 100%;
-    height: 170px;
+    height: 220px;
     background-color: #fff;
   }
 }

@@ -25,7 +25,7 @@
               @click="showBegCalendar = true"
               label-width="60"
             />
-            <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" :min-date="minDate" :max-date="maxDate"/>
+            <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" :min-date="minDate" :max-date="maxDate" :default-date="defaultDate"/>
           </van-col>
           <van-col span="10">
             <van-field
@@ -38,7 +38,7 @@
               @click="showEndCalendar = true"
               label-width="60"
             />
-            <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" :min-date="minDate" :max-date="maxDate"/>
+            <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" :min-date="minDate" :max-date="maxDate" :default-date="defaultDate"/>
           </van-col>
           <van-col span="3" class="search_but">
             <van-button round type="primary" size="mini" @click="searchArrivalNotice">查询</van-button>
@@ -78,6 +78,7 @@ export default {
       endDateVal:"", //结束时间
       minDate: null,
       maxDate: null,
+      defaultDate:null,
       showBegCalendar: false,
       showEndCalendar: false,
       arrivalNoticeList: []
@@ -129,10 +130,11 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     var data = new Date()
-    var minDataVal = new Date(data.getFullYear(), data.getMonth());
-    var maxDataVal = new Date(data.getFullYear(), data.getMonth()+2);
+    var minDataVal = new Date(data.getFullYear()-1, data.getMonth());
+    var maxDataVal = new Date(data.getFullYear()+4, data.getMonth()+2);
     this.minDate = minDataVal;
     this.maxDate = maxDataVal;
+    this.defaultDate = data;
     this.begDateVal = this.formatDate(data); //开始时间
     this.endDateVal = this.formatDate(data);//结束时间
   },
