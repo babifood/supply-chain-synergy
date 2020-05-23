@@ -54,7 +54,7 @@
         </van-panel>
         <van-row type="flex" justify="center">
           <van-col span="23">
-            <van-button round type="primary" block @click="submit">保存提交</van-button>
+            <van-button round type="primary" block :disabled="btnStatus === 1" @click="submit">保存提交</van-button>
           </van-col>
         </van-row>
       </div>
@@ -79,6 +79,7 @@ export default {
       defaultDate:null,
       //请求参数
       aptitudeId:this.$route.params.aptitudeId,
+      btnStatus:0,
 
       aptitudeName: "",
       begDate: "",
@@ -187,16 +188,14 @@ export default {
       this.showEndCalendar = false;
     },
     submit(){
-      
       if(this.newEndDate == ''&& this.newBegDate == ''){
           Toast.fail('日期不能为空');
+      }else if(this.fileList.length <= 0){
+          Toast.fail('资质文件未上传');
       }else{
         let fileNames = []
         this.fileList.forEach(file =>{
-          let item ={
-            fileName:file.file.name
-          }
-          fileNames.push(item)
+          fileNames.push(file.file.name)
         })
         this.axios.post('/supplier/provider/updateProviderCertificateInfo',
           {
@@ -213,6 +212,7 @@ export default {
           }
         ).then(res =>{
           Toast.fail(res.data.message);
+          this.btnStatus = 1;
         })
         .catch(error => {
           console.log(error);

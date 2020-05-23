@@ -75,7 +75,7 @@ export default {
     //这里存放数据
     return {
       //请求参数
-      orderId:this.$route.params.orderId,
+      statesId:this.$route.params.statesId,
       fileSataus:this.$route.params.status,
 
       showAccessory: false, //附件查看组件显影
@@ -133,7 +133,7 @@ export default {
     uploadFileVelue(array,fileDesc){
       array.forEach(obj =>{
         let f = {
-          stateOrderId:this.billCode,
+          statesId:this.statesId,
           fileId:obj.fileId,
           fileName:obj.file.name,
           fileDesc:fileDesc
@@ -171,7 +171,7 @@ export default {
             'token': sessionStorage.getItem('token')
           },
           params: {
-            stateOrderId: this.orderId,
+            statesId: this.statesId,
             fileStatus:this.fileSataus
           }
       }).then(res => {

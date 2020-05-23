@@ -122,11 +122,11 @@ export default {
           }
         ).then(function (res) {
           console.log(res);
-          Toast.success('资质提交成功');
+          Toast.success('提交成功');
         })
         .catch(function (error) {
           console.log(error);
-          Toast.fail('资质提交失败');
+          Toast.fail('提交失败');
         });
     },
     getAccountListDate() {

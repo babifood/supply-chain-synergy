@@ -53,7 +53,7 @@ export default new Router({
       component: Order
     },
     {
-      path: '/Order/OrderInfo/:ordetId',
+      path: '/Order/OrderInfo/:ordersId',
       name: 'OrderInfo',
       component: OrderInfo
     },
@@ -83,17 +83,17 @@ export default new Router({
       component: AccountMain
     },
     {
-      path: '/AccountMain/AccountInfo/:orderId/:billMonth/:sataus',
+      path: '/AccountMain/AccountInfo/:statesId/:billMonth/:sataus',
       name: 'AccountInfo',
       component: AccountInfo
     },
     {
-      path: '/AccountMain/AccountInfo/AccountProducInfo/:productId/:orderId/:billMonth',
+      path: '/AccountMain/AccountInfo/AccountProducInfo/:productId/:statesId/:billMonth',
       name: 'AccountProducInfo',
       component: AccountProducInfo
     },
     {
-      path: '/AccountMain/AccountUploader/:orderId/:billMonth/:sataus',
+      path: '/AccountMain/AccountUploader/:statesId/:billMonth/:sataus',
       name: 'AccountUploader',
       component: AccountUploader
     },

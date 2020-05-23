@@ -69,7 +69,7 @@ export default {
     return {
       //请求参数
       billMonth:this.$route.params.billMonth,
-      orderId:this.$route.params.orderId,
+      statesId:this.$route.params.statesId,
       productId:this.$route.params.productId,
       //数据列表
       productList: [],//产品列表集合
@@ -96,7 +96,7 @@ export default {
             'token': sessionStorage.getItem('token'),
           },
           params: {
-            stateOrderId:this.orderId,//对账单号 		
+            statesId:this.statesId,//对账单号 		
             matterId:this.productId,//	物料编号	
             yearMonth:this.billMonth,
           }

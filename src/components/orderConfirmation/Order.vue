@@ -19,10 +19,10 @@
       error-text="请求失败，点击重新加载"
       @load="onLoad">
       <router-link
-        :to="'/Order/OrderInfo/'+item.orderNo"
+        :to="'/Order/OrderInfo/'+item.ordersId"
         class="list_item"
         v-for="item in list"
-        :key="item.orderNo"
+        :key="item.ordersId"
         tag="div"
       >
         <van-row type="flex" justify="center">

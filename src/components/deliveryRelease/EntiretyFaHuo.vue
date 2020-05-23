@@ -143,7 +143,7 @@ export default {
       entiretyList:[],//整单发货商品明细列表
       shipmentDect: "",
       distributionValue: "", //配送方式
-      distributionColumns: ["集装箱卡车", "快递配送"], //配送方式选择
+      distributionColumns: [], //配送方式选择
       distributionShowPicker: false, //配送方式下拉显示控制
       dateTimeValue: "",
       dateTimeShowPicker: false, //预计到货时间显示隐藏
@@ -323,6 +323,29 @@ export default {
         fileObj.push(fileitem)
       })
       return fileObj
+    },
+    getdistributionColumns(){//配送方式数据加载方法
+       this.axios
+        .get("/supplier/shippingMethod/findShippingCodeAndNameList", {
+          headers: {
+            'token': sessionStorage.getItem('token'),
+          }
+        })
+        .then(res => {
+          if(res.data.code == "200"){
+            this.distributionConvert(res.data.data)
+          }else{
+            Toast.fail(res.data.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    distributionConvert(arr){//配送方式数据转换绑定
+      arr.forEach(item =>{
+        this.distributionColumns.push(item.shippingName);
+      })
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -332,6 +355,7 @@ export default {
     
     this.deliveryIds = this.$route.query.orders;    
     this.loadOrdeProduct();
+    this.getdistributionColumns();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

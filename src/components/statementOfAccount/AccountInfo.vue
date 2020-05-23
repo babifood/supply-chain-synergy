@@ -61,7 +61,7 @@
       v-for="item in accountProductList"
       :key="item.matterId"
       tag="div"
-      :to="'/AccountMain/AccountInfo/AccountProducInfo/'+item.matterId+'/'+orderId+'/'+billMonth"
+      :to="'/AccountMain/AccountInfo/AccountProducInfo/'+item.matterId+'/'+statesId+'/'+billMonth"
     >
       <van-row type="flex" justify="center" align="center">
         <van-col span="12">
@@ -89,7 +89,7 @@ export default {
     //这里存放数据
     return {
       //请求参数
-      orderId:this.$route.params.orderId,
+      statesId:this.$route.params.statesId,
       billMonth:this.$route.params.billMonth,
       
       showAccessory: false, //附件查看组件显影
@@ -117,7 +117,7 @@ export default {
     accountAffirm() {
       this.axios.post('/supplier/state/updateStatInfo'
         ,{
-          'orderStateId':this.orderId
+          'statesId':this.statesId
         }
         ,{
           headers: {
@@ -150,7 +150,7 @@ export default {
             'token': sessionStorage.getItem('token'),
           },
           params: {
-            stateOrderId:this.orderId,
+            statesId:this.statesId,
             yearMonth:this.billMonth
           }
         })

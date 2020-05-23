@@ -84,6 +84,7 @@ export default {
   data() {
     //这里存放数据
     return {
+      ordersId:'',
       orderNo: "",
       orderSum: "",
       buyer: "",
@@ -107,7 +108,7 @@ export default {
             'token': sessionStorage.getItem('token')
           },
           params: {
-            orderNo: this.orderNo
+            ordersId: this.ordersId
           }
         })
         .then(res => {
@@ -133,7 +134,7 @@ export default {
           this.axios.post('/supplier/order/updateOrderInfo',
             {
               'confirmDesc': this.affirmDESC,
-              'orderNo': this.orderNo
+              'ordersId': this.ordersId
             },{
               headers: {
                 'token': sessionStorage.getItem('token'),
@@ -153,7 +154,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     //订单编号等于路由传过来的订单编号
-    this.orderNo = this.$route.params.ordetId;
+    this.ordersId = this.$route.params.ordersId;
     this.loadProduct()
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

@@ -48,9 +48,9 @@
       <router-link
         class="list_item"
         v-for="item in list "
-        :key="item.stateOrderId"
+        :key="item.statesId"
         tag="div"
-        :to="routerPath+item.billNo+'/'+item.billMonth+'/'+item.billStatusVle"
+        :to="routerPath+item.statesId+'/'+item.billMonth+'/'+item.billStatusVle"
       >
         <van-row type="flex" justify="center">
           <van-col span="7">{{item.billMonth}}</van-col>
@@ -140,6 +140,7 @@ export default {
       var returnArray = []
       array.forEach(obj =>{
         let item = {
+          statesId:obj.statesId,//账单id
           billMonth:obj.stateDate,//账单月份
           billNo:obj.stateOrderId,//账单号
           billStatus:obj.stateStatus==0?'未确认':obj.stateStatus==1?'已确认':obj.stateStatus==2?'已失效':'',//订单状态
@@ -154,6 +155,7 @@ export default {
       var returnArray = []
       array.forEach(obj =>{
         let item = {
+          statesId:obj.statesId,//账单id
           billMonth:obj.stateDate,//账单月份
           billNo:obj.stateOrderId,//账单号fileStatus
           billStatus:obj.fileStatus==0?'未上传':obj.fileStatus==1?'已上传':'',//订单状态
