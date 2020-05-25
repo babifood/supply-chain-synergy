@@ -21,7 +21,9 @@
       tag="div"
     >
       <van-row type="flex" justify="center">
-        <van-col span="8">{{item.exNumberLx}}</van-col>
+        <van-col span="8">
+          <van-notice-bar :scrollable="false" color="#000000" background="#fff">{{item.exNumber}}</van-notice-bar>
+        </van-col>
         <van-col span="7">{{item.exNumberTo}}</van-col>
         <van-col span="5">{{item.isLast | showStatus}}</van-col>
         <van-col span="1">
@@ -104,5 +106,11 @@ export default {
   height: 40px;
   line-height: 40px;
   font-size: 14px;
+  .van-notice-bar{
+    padding: 0px;
+  }
+  .van-hairline--bottom{
+    z-index: 999;
+  }
 }
 </style>
