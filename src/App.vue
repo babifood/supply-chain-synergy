@@ -4,14 +4,14 @@
     <!-- 头部样式 -->
     <van-sticky>
       <van-nav-bar
-        title="供应链协同平台"
+        title="中饮采购平台"
         left-text="返回"
         left-arrow
         fixed:true
         @click-left="onClickLeft"
         v-if="showBtn"
       />
-      <van-nav-bar title="供应链协同平台" fixed:true v-if="showNotBtn"/>
+      <van-nav-bar title="中饮采购平台" fixed:true v-if="showNotBtn"/>
     </van-sticky>
     <!-- 组件容器 -->
     <router-view></router-view>
