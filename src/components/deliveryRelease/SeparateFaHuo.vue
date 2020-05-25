@@ -142,7 +142,6 @@ export default {
       dateTimeShowPicker: false, //预计到货时间显示隐藏
       pitchOnIndex:null,//选中的下标
       shipmentList: [],
-      compressFile:null,//压缩的图片
     };
   },
   //监听属性 类似于data概念
@@ -154,9 +153,8 @@ export default {
     afterRead(file) {
       file.status = 'uploading';
       file.message = '上传中...';
-      this.uploadImg(file);
       const formData = new FormData();  // 声明一个FormData对象
-	    formData.append("files", this.compressFile.file);
+	    formData.append("files", file.content);
       this.axios.post('/supplier/file/multiFileUpload',formData,
           {
             headers: {
@@ -179,34 +177,6 @@ export default {
           file.status = 'failed';
           file.message = '上传失败';
         });
-    },
-    uploadImg(file) {//压缩图片
-      // 大于1.5MB的jpeg和png图片都缩小像素上传
-      if(/\/(?:jpeg|png)/i.test(file.file.type)&&file.file.size>1500000) {
-        // 创建Canvas对象(画布)
-        let canvas =  document.createElement('canvas')  
-        // 获取对应的CanvasRenderingContext2D对象(画笔)
-        let context = canvas.getContext('2d') 
-        // 创建新的图片对象 
-        let img = new Image()
-        // 指定图片的DataURL(图片的base64编码数据)
-        img.src = file.content
-        // 监听浏览器加载图片完成，然后进行进行绘制
-        img.onload = () => {
-          // 指定canvas画布大小，该大小为最后生成图片的大小
-          canvas.width = 400
-          canvas.height = 300
-          /* drawImage画布绘制的方法。(0,0)表示以Canvas画布左上角为起点，400，300是将图片按给定的像素进行缩小。
-          如果不指定缩小的像素图片将以图片原始大小进行绘制，图片像素如果大于画布将会从左上角开始按画布大小部分绘制图片，最后的图片就是张局部图。*/ 
-          context.drawImage(img, 0, 0, 400, 300)
-          // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
-          file.content = canvas.toDataURL(file.file.type, 0.92) 
-          this.compressFile = file;
-        }                       
-      }else{
-        // 不做处理的jpg和png以及gif直接保存
-        this.compressFile = file;
-      }
     },
     //加载订单产品数据
     loadOrdeProduct(){
