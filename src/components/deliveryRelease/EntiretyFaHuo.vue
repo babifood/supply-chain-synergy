@@ -162,7 +162,7 @@ export default {
       file.message = '上传中...';
       this.uploadImg(file);
       const formData = new FormData();  // 声明一个FormData对象
-	    formData.append("files", file.file);
+	    formData.append("files", this.compressFile.file);
       this.axios.post('/supplier/file/multiFileUpload',formData,
           {
             headers: {
@@ -207,11 +207,11 @@ export default {
           context.drawImage(img, 0, 0, 400, 300)
           // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
           file.content = canvas.toDataURL(file.file.type, 0.92) 
-          this.compressFile = file.content;
+          this.compressFile = file;
         }                       
       }else{
         // 不做处理的jpg和png以及gif直接保存
-        this.compressFile = file.content;
+        this.compressFile = file;
       }
     },
     //加载订单产品数据

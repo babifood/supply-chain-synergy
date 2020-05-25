@@ -103,7 +103,7 @@ export default {
       file.message = '上传中...';
       this.uploadImg(file)
       const formData = new FormData();  // 声明一个FormData对象
-	    formData.append("files", this.compressFile);
+	    formData.append("files", this.compressFile.file);
       this.axios.post('/supplier/file/multiFileUpload',formData,
           {
             headers: {
@@ -148,11 +148,11 @@ export default {
           context.drawImage(img, 0, 0, 400, 300)
           // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
           file.content = canvas.toDataURL(file.file.type, 0.92) 
-          this.compressFile = file.content;
+          this.compressFile = file;
         }                       
       }else{
         // 不做处理的jpg和png以及gif直接保存
-        this.compressFile = file.content;
+        this.compressFile = file;
       }
     },
     //获取供应商详情
@@ -223,6 +223,7 @@ export default {
       }else if(this.fileList.length <= 0){
           Toast.fail('资质文件未上传');
       }else{
+        this.btnStatus = 1;
         let fileNames = []
         this.fileList.forEach(file =>{
           fileNames.push(file.file.name)
@@ -241,12 +242,11 @@ export default {
             }
           }
         ).then(res =>{
-          Toast.fail(res.data.message);
-          this.btnStatus = 1;
+          Toast.success(res.data.message);
         })
         .catch(error => {
-          console.log(error);
           Toast.fail('资质提交失败');
+          this.btnStatus = 0;
         });
       }
       
