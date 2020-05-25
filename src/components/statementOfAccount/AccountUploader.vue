@@ -43,17 +43,17 @@
     <div>
       <van-panel title="账单扫描件:">
         <div>
-          <van-uploader v-model="billFileList" :max-count="4" :after-read="afterRead"/>
+          <van-uploader v-model="billFileList" :max-count="4" :after-read="afterRead" accept="image/png,image/jpeg"/>
         </div>
       </van-panel>
       <van-panel title="发票扫描件:">
         <div>
-          <van-uploader v-model="invoiceFileList" :max-count="4" :after-read="afterRead"/>
+          <van-uploader v-model="invoiceFileList" :max-count="4" :after-read="afterRead" accept="image/png,image/jpeg"/>
         </div>
       </van-panel>
       <van-panel title="其他文件:">
         <div>
-          <van-uploader v-model="restsFileList" multiple :max-count="4" :after-read="afterRead"/>
+          <van-uploader v-model="restsFileList" multiple :max-count="4" :after-read="afterRead" accept="image/png,image/jpeg"/>
         </div>
       </van-panel>
     </div>
@@ -106,7 +106,7 @@ export default {
       file.status = 'uploading';
       file.message = '上传中...';
       const formData = new FormData();  // 声明一个FormData对象
-	    formData.append("files", file.content);
+      formData.append("files", file.file);
       this.axios.post('/supplier/file/multiFileUpload',formData,
           {
             headers: {

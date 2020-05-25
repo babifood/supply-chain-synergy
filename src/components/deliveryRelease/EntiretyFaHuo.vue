@@ -47,7 +47,7 @@
           <div>
             <van-row type="flex" justify="center">
               <van-col span="23">
-                <van-uploader v-model="item.fileList" multiple :max-count="4" :after-read="afterRead"/>
+                <van-uploader v-model="item.fileList" multiple :max-count="4" :after-read="afterRead" accept="image/png,image/jpeg"/>
               </van-col>
             </van-row>
           </div>
@@ -160,7 +160,7 @@ export default {
       file.status = 'uploading';
       file.message = '上传中...';
       const formData = new FormData();  // 声明一个FormData对象
-	    formData.append("files", file.content);
+      formData.append("files", file.file);
       this.axios.post('/supplier/file/multiFileUpload',formData,
           {
             headers: {
