@@ -10,7 +10,10 @@
       </van-row>
       <!-- 右对齐 -->
       <van-row type="flex" justify="space-between" class="row2_class">
-        <van-col span="5"></van-col>
+        <van-col span="8" @click="showAccessory=true">
+          附件查看
+          <van-image-preview v-model="showAccessory" :images="accountImages"></van-image-preview>
+        </van-col>
         <van-col span="9">{{announcemenDate}}</van-col>
       </van-row>
       <van-divider :style="{ color: '#969799', borderColor: '#969799',}"/>
@@ -36,7 +39,9 @@ export default {
       announcemenTitle: "",
       announcemenDate: "",
       // timesOfView: 20,
-      announcemenText: " "
+      announcemenText: "",
+      accountImages:[],
+      showAccessory: false, //附件查看组件显影
     };
   },
   //监听属性 类似于data概念
@@ -59,13 +64,32 @@ export default {
           this.announcemenTitle = res.data.data.messageTitle;
           this.announcemenDate = res.data.data.publishDate;
           this.announcemenText = res.data.data.messageContent;
+          this.fileSetFileList(res.data.data.fileVos,this.accountImages);
         }else{
           Toast.fail(res.data.message);
         }   
       }).catch(error => {
         console.log(error);
       });
-    }
+    },
+    fileSetFileList(resultFile,fileTypeList){
+      resultFile.forEach(f =>{
+          this.axios.get("/supplier/file/fileDownload", {
+            headers: {
+              'token': sessionStorage.getItem('token')
+            },
+            responseType: 'arraybuffer',
+            params: {
+              fileId: f.fileId
+            }
+        }).then(res => {
+          let img = 'data:image/png;base64,'+ btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+          fileTypeList.push(img)
+        }).catch(error => {
+          console.log(error);
+        });
+      })
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
