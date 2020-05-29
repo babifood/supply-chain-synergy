@@ -259,9 +259,9 @@ export default {
     thisShipmentBlur(productId) {
       //本次发货失去焦点事件
       let en = this.entiretyList.find(item => item.productId===productId);
-      if((parseFloat(en.sentProductNub) + parseFloat(en.thisProductNub))>= parseFloat(en.productNub)){
+      if((parseFloat(en.sentProductNub) + parseFloat(en.thisProductNub)) >= parseFloat(en.productNub)){
         en.checked = true;
-      }else{
+      }else if((parseFloat(en.sentProductNub) + parseFloat(en.thisProductNub)) < parseFloat(en.productNub)){
         en.checked = false;
       }
     },

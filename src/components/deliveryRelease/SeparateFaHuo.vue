@@ -227,10 +227,10 @@ export default {
     thisShipmentBlur(productId) {
       //本次发货失去焦点事件
       let en = this.shipmentList.find(item => item.productId===productId);
-      if(en.checked == true) return
+      // if(en.checked == true) return
       if((parseFloat(en.sentProductNub) + parseFloat(en.thisProductNub))>= parseFloat(en.productNub)){
         en.checked = true;
-      }else{
+      }else if((parseFloat(en.sentProductNub) + parseFloat(en.thisProductNub)) < parseFloat(en.productNub)){
         en.checked = false;
       }
     },
