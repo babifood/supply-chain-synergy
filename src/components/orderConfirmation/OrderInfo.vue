@@ -68,7 +68,7 @@
         />
       </div>
       <div slot="footer">
-        <van-button type="primary" block @click="affirmOrder">订单确认</van-button>
+        <van-button type="primary" block :disabled="btnStatus === 1" @click="affirmOrder">订单确认</van-button>
       </div>
     </van-panel>
   </div>
@@ -91,7 +91,8 @@ export default {
       mobileNub: "",
       orderContract:'',
       productList:[],
-      affirmDESC: ""
+      affirmDESC: "",
+      btnStatus :0
     };
   },
   //监听属性 类似于data概念
@@ -142,6 +143,7 @@ export default {
               }
             }
           ).then(res =>{
+            this.btnStatus = 1;
             Toast.success(res.data.message);
           })
           .catch(error => {

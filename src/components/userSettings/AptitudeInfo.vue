@@ -27,7 +27,17 @@
               placeholder="选择日期"
               @click="showBegCalendar = true"
             />
-            <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" :min-date="minDate" :max-date="maxDate" :default-date="defaultDate" />
+            <van-popup v-model="showBegCalendar" position="bottom">
+              <van-datetime-picker
+                type="date"
+                v-model="defaultDate"
+                :min-date="minDate"
+                :max-date="maxDate"
+                @cancel="showBegCalendar = false"
+                @confirm="onBegConfirm"
+              />
+            </van-popup>
+            <!-- <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" :min-date="minDate" :max-date="maxDate" :default-date="defaultDate" /> -->
           </van-col>
           <van-col span="10">
             <van-field
@@ -40,7 +50,17 @@
               placeholder="选择日期"
               @click="showEndCalendar = true"
             />
-            <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" :min-date="minDate" :max-date="maxDate" :default-date="defaultDate"/>
+            <van-popup v-model="showEndCalendar" position="bottom">
+              <van-datetime-picker
+                type="date"
+                v-model="defaultDate"
+                :min-date="minDate"
+                :max-date="maxDate"
+                @cancel="showEndCalendar = false"
+                @confirm="onEndConfirm"
+              />
+            </van-popup>
+            <!-- <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" :min-date="minDate" :max-date="maxDate" :default-date="defaultDate"/> -->
           </van-col>
         </van-row>
         <van-panel title="附件上传">
@@ -228,7 +248,7 @@ export default {
     this.getAptitudeinfo();
     var data = new Date()
     var minDataVal = new Date(data.getFullYear()-1, data.getMonth());
-    var maxDataVal = new Date(data.getFullYear()+4, data.getMonth()+2);
+    var maxDataVal = new Date(data.getFullYear()+10, 12);
     this.minDate = minDataVal;
     this.maxDate = maxDataVal;
     this.defaultDate = data;
