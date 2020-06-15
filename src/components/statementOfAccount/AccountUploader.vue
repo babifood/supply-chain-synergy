@@ -79,10 +79,7 @@ export default {
       fileSataus:this.$route.params.status,
 
       showAccessory: false, //附件查看组件显影
-      accountImages: [
-        "https://img.yzcdn.cn/1.jpg",
-        "https://img.yzcdn.cn/2.jpg"
-      ], //附件列表
+      accountImages: [], //附件列表
       compName: "", //对账单位
       billMonth: "", //账单月份
       billCode: "", //账单单号
@@ -115,7 +112,7 @@ export default {
             }
           }
         ).then(function (res) {
-          console.log(res);
+          
           if(res.data.code=='200'){
             file.status = 'done';
             file.message = '上传成功';
@@ -153,7 +150,7 @@ export default {
             }
           }
         ).then(function (res) {
-          console.log(res);
+          
           if(res.data.code=='200'){
             Toast.success('附件上传保存成功');
           }else{
@@ -175,7 +172,7 @@ export default {
             fileStatus:this.fileSataus
           }
       }).then(res => {
-        console.log(res);
+        
         if(res.data.code == '200'){
           this.compName = res.data.data.supplierName; //对账单位
           this.billMonth = res.data.data.yearmonth; //账单月份
@@ -184,6 +181,8 @@ export default {
           this.currency = res.data.data.currency; //币种
           this.monthlyDeductions = res.data.data.monthWithhold; //月度扣款总额
           this.actualMoney = res.data.data.actualSum;//实际货款
+          var imgurl  = "http://10.1.1.46:8081/"+this.billCode+".JPG";
+          this.accountImages.push(imgurl);
           //更具后台返回的文件数组来组织对应的文件数组
           this.fileConvertTypeListFile(res.data.data.fileInfoMap)
         }else{

@@ -28,8 +28,8 @@ export default {
   data() {
     //这里存放数据
     return {
-      showBtn:true,
-      showNotBtn:false
+      showBtn:false,
+      showNotBtn:true
     };
   },
   //监听属性 类似于data概念

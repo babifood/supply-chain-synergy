@@ -93,10 +93,7 @@ export default {
       billMonth:this.$route.params.billMonth,
       
       showAccessory: false, //附件查看组件显影
-      accountImages: [
-        "https://img.yzcdn.cn/1.jpg",
-        "https://img.yzcdn.cn/2.jpg"
-      ], //附件列表
+      accountImages: [], //附件列表
       compName: "", //对账单位
       billCode: "", //账单单号
       totalAmountPayable: 0, //应付总金额
@@ -164,6 +161,8 @@ export default {
             this.monthlyDeductions = rep.data.data.monthWithhold;
             this.actualMoney = rep.data.data.actualSum;
             this.accountProductList = rep.data.data.matterList;
+            var imgurl  = "http://10.1.1.46:8081/"+this.billCode+".JPG";
+            this.accountImages.push(imgurl);
           }else{
             Toast.fail(res.data.message);
           }
@@ -182,6 +181,7 @@ export default {
     //  console.log( 'billMonth'+this.$route.params.billMonth);
      
     this.getAccountInfoData();
+    
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
