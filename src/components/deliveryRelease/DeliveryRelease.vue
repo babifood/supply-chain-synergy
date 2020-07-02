@@ -61,7 +61,17 @@
                   placeholder="选择日期"
                   @click="showBegCalendar = true"
                 />
-                <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" :min-date="minDate" :max-date="maxDate"/>
+                <van-popup v-model="showBegCalendar" position="bottom">
+                  <van-datetime-picker
+                    type="date"
+                    v-model="defaultDate"
+                    :min-date="minDate"
+                    :max-date="maxDate"
+                    @cancel="showBegCalendar = false"
+                    @confirm="onBegConfirm"
+                  />
+                </van-popup>
+                <!-- <van-calendar v-model="showBegCalendar" @confirm="onBegConfirm" :min-date="minDate" :max-date="maxDate"/> -->
               </van-col>
               <van-col span="10">
                 <van-field
@@ -74,7 +84,17 @@
                   placeholder="选择日期"
                   @click="showEndCalendar = true"
                 />
-                <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" :min-date="minDate" :max-date="maxDate"/>
+                <van-popup v-model="showEndCalendar" position="bottom">
+                  <van-datetime-picker
+                    type="date"
+                    v-model="defaultDate"
+                    :min-date="minDate"
+                    :max-date="maxDate"
+                    @cancel="showEndCalendar = false"
+                    @confirm="onEndConfirm"
+                  />
+                </van-popup>
+                <!-- <van-calendar v-model="showEndCalendar" @confirm="onEndConfirm" :min-date="minDate" :max-date="maxDate"/> -->
               </van-col>
               <van-col span="3" class="search_but">
                 <van-button round type="primary" size="mini" @click="searchHistory">查询</van-button>
@@ -119,6 +139,7 @@ export default {
       endDateVal: "",
       minDate: null,
       maxDate: null,
+      defaultDate:null,
       showBegCalendar: false,
       showEndCalendar: false,
       historyList: [],
@@ -218,11 +239,17 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    // var data = new Date()
+    // var minDataVal = new Date(data.getFullYear(), data.getMonth());
+    // var maxDataVal = new Date(data.getFullYear(), data.getMonth()+2);
+    // this.minDate = minDataVal;
+    // this.maxDate = maxDataVal;
     var data = new Date()
-    var minDataVal = new Date(data.getFullYear(), data.getMonth());
-    var maxDataVal = new Date(data.getFullYear(), data.getMonth()+2);
+    var minDataVal = new Date(data.getFullYear()-1, data.getMonth());
+    var maxDataVal = new Date(data.getFullYear()+10, 12);
     this.minDate = minDataVal;
     this.maxDate = maxDataVal;
+    this.defaultDate = data;
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

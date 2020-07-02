@@ -43,17 +43,17 @@
     <div>
       <van-panel title="账单扫描件:">
         <div>
-          <van-uploader v-model="billFileList" :max-count="4" :after-read="afterRead" accept="image/png,image/jpeg"/>
+          <van-uploader v-model="billFileList" :max-count="4" :after-read="afterRead"/>
         </div>
       </van-panel>
       <van-panel title="发票扫描件:">
         <div>
-          <van-uploader v-model="invoiceFileList" :max-count="4" :after-read="afterRead" accept="image/png,image/jpeg"/>
+          <van-uploader v-model="invoiceFileList" :max-count="4" :after-read="afterRead"/>
         </div>
       </van-panel>
       <van-panel title="其他文件:">
         <div>
-          <van-uploader v-model="restsFileList" multiple :max-count="4" :after-read="afterRead" accept="image/png,image/jpeg"/>
+          <van-uploader v-model="restsFileList" multiple :max-count="4" :after-read="afterRead"/>
         </div>
       </van-panel>
     </div>
@@ -181,7 +181,7 @@ export default {
           this.currency = res.data.data.currency; //币种
           this.monthlyDeductions = res.data.data.monthWithhold; //月度扣款总额
           this.actualMoney = res.data.data.actualSum;//实际货款
-          var imgurl  = "http://10.1.1.46:8081/"+this.billCode+".JPG";
+          var imgurl  = "http://122.144.202.58:8081/"+this.billCode+".JPG";
           this.accountImages.push(imgurl);
           //更具后台返回的文件数组来组织对应的文件数组
           this.fileConvertTypeListFile(res.data.data.fileInfoMap)

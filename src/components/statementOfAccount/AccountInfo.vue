@@ -161,7 +161,7 @@ export default {
             this.monthlyDeductions = rep.data.data.monthWithhold;
             this.actualMoney = rep.data.data.actualSum;
             this.accountProductList = rep.data.data.matterList;
-            var imgurl  = "http://10.1.1.46:8081/"+this.billCode+".JPG";
+            var imgurl  = "http://122.144.202.58:8081/"+this.billCode+".JPG";
             this.accountImages.push(imgurl);
           }else{
             Toast.fail(res.data.message);

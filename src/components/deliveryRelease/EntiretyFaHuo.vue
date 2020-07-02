@@ -47,7 +47,7 @@
           <div>
             <van-row type="flex" justify="center">
               <van-col span="23">
-                <van-uploader v-model="item.fileList" multiple :max-count="4" :after-read="afterRead" accept="image/png,image/jpeg"/>
+                <van-uploader v-model="item.fileList" multiple :max-count="4" :after-read="afterRead"/>
               </van-col>
             </van-row>
           </div>

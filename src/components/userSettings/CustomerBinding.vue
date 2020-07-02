@@ -92,7 +92,7 @@ export default {
         })
         .catch(error => {
           console.log(error);
-          Toast.fail('绑定失败');
+          Toast.fail('当前页面失效，请在公众号重新进入');
         });
     }
   },
