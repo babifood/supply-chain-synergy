@@ -159,17 +159,19 @@ export default {
             'token': sessionStorage.getItem('token'),
             'operatorId':'1'
           },
-          // params: {
-          //   limit: this.limit,
-          //   page:10
-          // }
+          params: {
+            limit: this.list.length + 1,
+            page:10
+          }
         })
         .then(res => {
           // 加载状态结束
           this.loading = false;
           if(res.data.code=="200"){
-            this.list = res.data.data.list;
-            if(res.data.data.total>=this.list.length){
+            res.data.data.list.forEach(element => {
+              this.list.push(element)
+            });
+            if(this.list.length >= res.data.data.total){
               this.finished = true;
             }
           }else{

@@ -84,15 +84,19 @@ export default {
             'supplierCode':'1'
           },
           params: {
-            messageCode:this.active
+            messageCode:this.active,
+            limit: this.list.length + 1,
+            page:10
           }
       }).then(res => {
         console.log(res);
           // 加载状态结束
         this.loading = false;
         if(res.data.code == '200'){
-          this.list = res.data.data.list;
-          if(res.data.data.total>=this.list.length){
+          res.data.data.list.forEach(element => {
+              this.list.push(element)
+          });
+          if(this.list.length >= res.data.data.total){
             this.finished = true;
           }  
         }else{
